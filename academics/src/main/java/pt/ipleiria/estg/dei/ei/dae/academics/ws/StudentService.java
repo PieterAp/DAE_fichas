@@ -28,11 +28,11 @@ public class StudentService {
     @Path("/")
     public Response createNewStudent (StudentDTO studentDTO){
         studentBean.create(
-                studentDTO.getUsername(),
-                studentDTO.getPassword(),
-                studentDTO.getName(),
-                studentDTO.getEmail(),
-                studentDTO.getCourseCode()
+            studentDTO.getUsername(),
+            studentDTO.getPassword(),
+            studentDTO.getName(),
+            studentDTO.getEmail(),
+            studentDTO.getCourseCode()
         );
 
         Student newStudent = studentBean.find(studentDTO.getUsername());
@@ -46,12 +46,12 @@ public class StudentService {
     // Converts an entity Student to a DTO Student class
     private StudentDTO toDTO(Student student) {
         return new StudentDTO(
-                student.getUsername(),
-                student.getPassword(),
-                student.getName(),
-                student.getEmail(),
-                student.getCourse().getCode(),
-                student.getCourse().getName()
+            student.getUsername(),
+            student.getPassword(),
+            student.getName(),
+            student.getEmail(),
+            student.getCourse().getCode(),
+            student.getCourse().getName()
         );
     }
 

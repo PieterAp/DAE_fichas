@@ -30,8 +30,8 @@ public class CourseService {
     @Path("/")
     public Response createNewCourse (CourseDTO courseDTO){
         courseBean.create(
-                courseDTO.getCode(),
-                courseDTO.getName()
+            courseDTO.getCode(),
+            courseDTO.getName()
         );
 
         Course newCourse = courseBean.find(courseDTO.getCode());
@@ -46,8 +46,8 @@ public class CourseService {
     // Converts an entity Course to a DTO Course class
     private CourseDTO toDTO(Course course) {
         return new CourseDTO(
-                course.getCode(),
-                course.getName()
+            course.getCode(),
+            course.getName()
         );
     }
 
