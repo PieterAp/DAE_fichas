@@ -1,34 +1,16 @@
-package pt.ipleiria.estg.dei.ei.dae.academics.entities;
+package pt.ipleiria.estg.dei.ei.dae.academics.dtos;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.NamedQueries;
-import jakarta.persistence.NamedQuery;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotNull;
-
-import java.io.Serializable;
-
-@Entity
-@NamedQueries({
-    @NamedQuery(
-        name = "getAllStudents",
-        query = "SELECT s FROM Student s ORDER BY s.name" // JPQL
-    )
-})
-public class Student implements Serializable {
-    @Id
+public class StudentDTO {
     String username;
-
     String password;
     String name;
     String email;
 
-    public Student() {
+    public StudentDTO() {
 
     }
 
-    public Student(String username, String password, String name, String email) {
+    public StudentDTO(String username, String password, String name, String email) {
         this.username = username;
         this.password = password;
         this.name = name;

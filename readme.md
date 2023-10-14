@@ -2,7 +2,7 @@
 
 Progresso:
 - [x]  Ficha 1
-- [ ]  Ficha 2
+- [x]  Ficha 2
 - [ ]  Ficha 3
 - [ ]  Ficha 4
 - [ ]  Ficha 5
