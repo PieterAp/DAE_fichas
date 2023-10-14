@@ -5,16 +5,20 @@ public class StudentDTO {
     String password;
     String name;
     String email;
+    long courseCode;
+    String courseName;
 
     public StudentDTO() {
 
     }
 
-    public StudentDTO(String username, String password, String name, String email) {
+    public StudentDTO(String username, String password, String name, String email, long courseCode, String courseName) {
         this.username = username;
         this.password = password;
         this.name = name;
         this.email = email;
+        this.courseCode = courseCode;
+        this.courseName = courseName;
     }
 
     public String getUsername() {
@@ -47,5 +51,21 @@ public class StudentDTO {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public long getCourseCode() {
+        return courseCode;
+    }
+
+    public void setCourseCode(long courseCode) {
+        this.courseCode = courseCode;
+    }
+
+    public String getCourseName() {
+        return courseName;
+    }
+
+    public void setCourseName(String courseName) {
+        this.courseName = courseName;
     }
 }
