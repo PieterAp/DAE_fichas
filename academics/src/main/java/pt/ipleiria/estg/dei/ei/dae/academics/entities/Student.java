@@ -16,13 +16,7 @@ import java.util.List;
         query = "SELECT s " +
                 "FROM Student s " +
                 "ORDER BY s.name" // JPQL
-    ),
-    @NamedQuery(
-        name = "getStudentWithSubjects",
-        query = "SELECT s " +
-                "FROM Student s " +
-                "WHERE s.username = :username AND subjects IS NOT EMPTY" // JPQL
-    ),
+    )
 })
 public class Student implements Serializable {
     @Id

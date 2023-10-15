@@ -4,6 +4,7 @@ import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
 import jakarta.persistence.PersistenceContext;
+import org.hibernate.Hibernate;
 import pt.ipleiria.estg.dei.ei.dae.academics.entities.Course;
 import pt.ipleiria.estg.dei.ei.dae.academics.entities.Student;
 import pt.ipleiria.estg.dei.ei.dae.academics.entities.Subject;
@@ -32,16 +33,17 @@ public class StudentBean {
     }
 
     public Student findStudentWithSubjects(String username) {
-        try {
-            return entityManager.createNamedQuery("getStudentWithSubjects", Student.class)
-                    .setParameter("username", username)
-                    .getSingleResult();
-        } catch (NoResultException e) {
+        Student student = find(username);
+
+        if (student == null || student.getSubjects().isEmpty()) {
             return null;
             //todo: not best approach, can lead to 2 scenarios:
             // - User does not exist
             // - User does exist but has no subjects
         }
+
+        Hibernate.initialize(student.getSubjects());
+        return student;
     }
 
     public List<Student> getAll() {
