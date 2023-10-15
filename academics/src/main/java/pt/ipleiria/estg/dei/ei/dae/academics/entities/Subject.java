@@ -3,6 +3,7 @@ package pt.ipleiria.estg.dei.ei.dae.academics.entities;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 
+import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -19,7 +20,7 @@ import java.util.List;
                 "ORDER BY course.name ASC, scholarYear DESC, courseYear ASC, name ASC" // JPQL
     )
 })
-public class Subject {
+public class Subject implements Serializable {
     @Id
     long code;
 
@@ -51,6 +52,20 @@ public class Subject {
         )
     )
     List<Student> students;
+
+    @ManyToMany
+    @JoinTable(
+        name = "subjects_teachers",
+        joinColumns = @JoinColumn(
+            name = "subject_code",
+            referencedColumnName = "code"
+        ),
+        inverseJoinColumns = @JoinColumn(
+            name = "teacher_username",
+            referencedColumnName = "username"
+        )
+    )
+    List<Teacher> teachers;
 
     public Subject() {
 

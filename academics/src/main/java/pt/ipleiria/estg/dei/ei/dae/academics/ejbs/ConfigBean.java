@@ -18,6 +18,12 @@ public class ConfigBean {
     @EJB
     private SubjectBean subjectBean;
 
+    @EJB
+    private AdministratorBean administratorBean;
+
+    @EJB
+    private TeacherBean teacherBean;
+
     @PostConstruct // will be called by the server right after it instantiates this EJB
     public void populateDB() {
         System.out.println("BEGIN populateDB");
@@ -61,6 +67,9 @@ public class ConfigBean {
         studentBean.enrollStudentInSubject("sandman", 9416);
         // EC
         studentBean.create("inesmaria","uHQ3^Fv","Inês","ines@my.ipleiria.pt",9089);
+
+        administratorBean.create("jRibeiro","jroisbeiro", "José","jribeiro@my.ipleiria.pt");
+        teacherBean.create("rmartinho","maarter","Ricardo","rmartinho@my.ipleiria.pt","A.S.0.1");
 
         System.out.println("END populateDB");
     }

@@ -9,7 +9,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 @Entity
-@Table(name = "students")
 @NamedQueries({
     @NamedQuery(
         name = "getAllStudents",
@@ -18,19 +17,7 @@ import java.util.List;
                 "ORDER BY s.name" // JPQL
     )
 })
-public class Student implements Serializable {
-    @Id
-    String username;
-
-    @NotNull
-    String password;
-
-    @NotNull
-    String name;
-
-    @NotNull
-    @Email
-    String email;
+public class Student extends User implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "course_code")
@@ -40,49 +27,15 @@ public class Student implements Serializable {
     @ManyToMany(mappedBy = "students")
     List<Subject> subjects;
 
+
     public Student() {
         this.subjects = new LinkedList<Subject>();
     }
 
     public Student(String username, String password, String name, String email, Course course) {
-        this.username = username;
-        this.password = password;
-        this.name = name;
-        this.email = email;
+        super(username, password, name, email);
         this.course = course;
         this.subjects = new LinkedList<Subject>();
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
     }
 
     public Course getCourse() {
