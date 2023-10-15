@@ -2,6 +2,18 @@
 GET http://localhost:8080/academics/api/students
 Accept: application/json
 
+##### Students - [GET] {String:username} getStudentDetails()
+GET http://localhost:8080/academics/api/students/piet
+Accept: application/json
+
+##### Students - [GET] {String:username} getStudentDetails()
+GET http://localhost:8080/academics/api/students/piet/subjects
+Accept: application/json
+
+##### Students - [GET] {String:username} getStudentDetails() (WILL FAIL DUE TO STUDENT NOT HAVING SUBJECTS)
+GET http://localhost:8080/academics/api/students/inesmaria/subjects
+Accept: application/json
+
 ##### Students - [POST] createNewStudent()
 POST http://localhost:8080/academics/api/students
 Content-Type: application/json

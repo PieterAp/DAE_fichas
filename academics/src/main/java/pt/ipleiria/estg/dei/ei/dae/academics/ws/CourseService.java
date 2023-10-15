@@ -23,7 +23,7 @@ public class CourseService {
     @GET // means: to call this endpoint, we need to use the HTTP GET method
     @Path("/") // means: the relative url path is “/api/courses/”
     public List<CourseDTO> getAllCourses() {
-        return toDTOs(courseBean.getAll());
+        return toDTOs(courseBean.getAllCourses());
     }
 
     @POST

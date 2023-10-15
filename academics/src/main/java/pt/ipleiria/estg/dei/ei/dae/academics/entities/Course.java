@@ -14,7 +14,9 @@ import java.util.List;
 @NamedQueries({
     @NamedQuery(
         name = "getAllCourses",
-        query = "SELECT c FROM Course c ORDER BY c.name" // JPQL
+        query = "SELECT c " +
+                "FROM Course c " +
+                "ORDER BY c.name" // JPQL
     )
 })
 public class Course {
@@ -24,17 +26,22 @@ public class Course {
     @NotNull
     String name;
 
-    @OneToMany(mappedBy = "course", cascade = CascadeType.DETACH)
+    @OneToMany(mappedBy = "course", cascade = CascadeType.REMOVE)
     List<Student> students;
+
+    @OneToMany(mappedBy = "course", cascade = CascadeType.REMOVE)
+    List<Subject> subjects;
 
     public Course() {
         this.students = new LinkedList<Student>();
+        this.subjects = new LinkedList<Subject>();
     }
 
     public Course(long code, String name) {
         this.code = code;
         this.name = name;
         this.students = new LinkedList<Student>();
+        this.subjects = new LinkedList<Subject>();
     }
 
     public long getCode() {
@@ -61,11 +68,27 @@ public class Course {
         this.students = students;
     }
 
+    public List<Subject> getSubjects() {
+        return subjects;
+    }
+
+    public void setSubjects(List<Subject> subjects) {
+        this.subjects = subjects;
+    }
+
     public void addStudent(Student student) {
         this.students.add(student);
     }
 
     public void removeStudent(Student student) {
         this.students.remove(student);
+    }
+
+    public void addSubject (Subject subject) {
+        this.subjects.add(subject);
+    }
+
+    public void removeSubject (Subject subject) {
+        this.subjects.remove(subject);
     }
 }

@@ -23,7 +23,7 @@ public class CourseBean {
         return entityManager.find(Course.class, courseCode);
     }
 
-    public List<Course> getAll() {
+    public List<Course> getAllCourses() {
         return entityManager.createNamedQuery("getAllCourses", Course.class).getResultList();
     }
 }

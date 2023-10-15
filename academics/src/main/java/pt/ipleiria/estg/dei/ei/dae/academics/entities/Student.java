@@ -5,14 +5,24 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 
 import java.io.Serializable;
+import java.util.LinkedList;
+import java.util.List;
 
 @Entity
 @Table(name = "students")
 @NamedQueries({
     @NamedQuery(
         name = "getAllStudents",
-        query = "SELECT s FROM Student s ORDER BY s.name" // JPQL
-    )
+        query = "SELECT s " +
+                "FROM Student s " +
+                "ORDER BY s.name" // JPQL
+    ),
+    @NamedQuery(
+        name = "getStudentWithSubjects",
+        query = "SELECT s " +
+                "FROM Student s " +
+                "WHERE s.username = :username AND subjects IS NOT EMPTY" // JPQL
+    ),
 })
 public class Student implements Serializable {
     @Id
@@ -33,8 +43,11 @@ public class Student implements Serializable {
     @NotNull
     Course course;
 
-    public Student() {
+    @ManyToMany(mappedBy = "students")
+    List<Subject> subjects;
 
+    public Student() {
+        this.subjects = new LinkedList<Subject>();
     }
 
     public Student(String username, String password, String name, String email, Course course) {
@@ -43,6 +56,7 @@ public class Student implements Serializable {
         this.name = name;
         this.email = email;
         this.course = course;
+        this.subjects = new LinkedList<Subject>();
     }
 
     public String getUsername() {
@@ -83,5 +97,21 @@ public class Student implements Serializable {
 
     public void setCourse(Course course) {
         this.course = course;
+    }
+
+    public List<Subject> getSubjects() {
+        return subjects;
+    }
+
+    public void setSubjects(List<Subject> subjects) {
+        this.subjects = subjects;
+    }
+
+    public void addSubject (Subject subject) {
+        this.subjects.add(subject);
+    }
+
+    public void removeSubject (Subject subject) {
+        this.subjects.remove(subject);
     }
 }
