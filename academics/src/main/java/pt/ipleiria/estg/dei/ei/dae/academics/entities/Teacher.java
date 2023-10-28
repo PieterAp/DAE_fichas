@@ -7,6 +7,14 @@ import java.util.LinkedList;
 import java.util.List;
 
 @Entity
+@NamedQueries({
+        @NamedQuery(
+                name = "getAllTeachers",
+                query = "SELECT t " +
+                        "FROM Teacher t " +
+                        "ORDER BY t.name" // JPQL
+        )
+})
 public class Teacher extends User implements Serializable {
     String office;
 
@@ -14,7 +22,7 @@ public class Teacher extends User implements Serializable {
     List<Subject> subjects;
 
     public Teacher() {
-
+        this.subjects = new LinkedList<Subject>();
     }
 
     public Teacher(String username, String password, String name, String email, String office) {
@@ -37,5 +45,21 @@ public class Teacher extends User implements Serializable {
 
     public void setSubjects(List<Subject> subjects) {
         this.subjects = subjects;
+    }
+
+    public void addSubject (Subject subject) {
+        if (this.subjects.contains(subject)) {
+            return;
+        }
+
+        this.subjects.add(subject);
+    }
+
+    public void removeSubject (Subject subject) {
+        if (!this.subjects.contains(subject)) {
+            return;
+        }
+
+        this.subjects.remove(subject);
     }
 }

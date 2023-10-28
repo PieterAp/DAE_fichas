@@ -5,19 +5,20 @@ import jakarta.validation.constraints.NotNull;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(
-    name = "courses",
-    uniqueConstraints = @UniqueConstraint(columnNames = {"name"})
+        name = "courses",
+        uniqueConstraints = @UniqueConstraint(columnNames = {"name"})
 )
 @NamedQueries({
-    @NamedQuery(
-        name = "getAllCourses",
-        query = "SELECT c " +
-                "FROM Course c " +
-                "ORDER BY c.name" // JPQL
-    )
+        @NamedQuery(
+                name = "getAllCourses",
+                query = "SELECT c " +
+                        "FROM Course c " +
+                        "ORDER BY c.name" // JPQL
+        )
 })
 public class Course {
     @Id
@@ -26,9 +27,11 @@ public class Course {
     @NotNull
     String name;
 
+    // orphanRemoval = true
     @OneToMany(mappedBy = "course", cascade = CascadeType.REMOVE)
     List<Student> students;
 
+    // orphanRemoval = true
     @OneToMany(mappedBy = "course", cascade = CascadeType.REMOVE)
     List<Subject> subjects;
 
@@ -77,18 +80,47 @@ public class Course {
     }
 
     public void addStudent(Student student) {
+        if (this.students.contains(student)) {
+            return;
+        }
+
         this.students.add(student);
     }
 
     public void removeStudent(Student student) {
+        if (!this.students.contains(student)) {
+            return;
+        }
+
         this.students.remove(student);
     }
 
     public void addSubject (Subject subject) {
+        if (this.subjects.contains(subject)) {
+            return;
+        }
+
         this.subjects.add(subject);
     }
 
     public void removeSubject (Subject subject) {
+        if (this.subjects.contains(subject)) {
+            return;
+        }
+
         this.subjects.remove(subject);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Course course = (Course) o;
+        return code == course.code && Objects.equals(name, course.name) && Objects.equals(students, course.students) && Objects.equals(subjects, course.subjects);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(code, name, students, subjects);
     }
 }

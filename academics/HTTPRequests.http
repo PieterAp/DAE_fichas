@@ -10,6 +10,10 @@ Accept: application/json
 GET http://localhost:8080/academics/api/students/piet/subjects
 Accept: application/json
 
+##### Students - [GET] {String:username} getStudentDetails() (WILL FAIL DUE TO STUDENT NOT EXISTING)
+GET http://localhost:8080/academics/api/students/avct/subjects
+Accept: application/json
+
 ##### Students - [GET] {String:username} getStudentDetails() (WILL FAIL DUE TO STUDENT NOT HAVING SUBJECTS)
 GET http://localhost:8080/academics/api/students/inesmaria/subjects
 Accept: application/json
@@ -26,6 +30,57 @@ Content-Type: application/json
   "courseCode": 9123
 }
 
+##### Students - [POST] {String:username}/enroll/{subjectCode} enrollStudentInSubject()
+POST http://localhost:8080/academics/api/students/piet/enroll/3734
+Accept: application/json
+
+##### Students - [POST] {String:username}/unroll/{subjectCode} unrollStudentFromSubject()
+POST http://localhost:8080/academics/api/students/piet/unroll/3734
+Accept: application/json
+
+
+
+##### Teachers - [GET] getAllStudents()
+GET http://localhost:8080/academics/api/teachers
+Accept: application/json
+
+##### Teachers - [GET] {String:username} getStudentDetails()
+GET http://localhost:8080/academics/api/teachers/rmartinho
+Accept: application/json
+
+##### Teachers - [GET] {String:username} getStudentDetails()
+GET http://localhost:8080/academics/api/teachers/rmartinho/subjects
+Accept: application/json
+
+##### Teachers - [GET] {String:username} getStudentDetails() (WILL FAIL DUE TO STUDENT NOT EXISTING)
+GET http://localhost:8080/academics/api/teachers/avct/subjects
+Accept: application/json
+
+##### Teachers - [GET] {String:username} getStudentDetails() (WILL FAIL DUE TO STUDENT NOT HAVING SUBJECTS)
+GET http://localhost:8080/academics/api/teachers/inesmaria/subjects
+Accept: application/json
+
+##### Teachers - [POST] createNewStudent()
+POST http://localhost:8080/academics/api/teachers
+Content-Type: application/json
+
+{
+  "username": "john",
+  "password": "jd",
+  "name": "John Doe",
+  "email": "johndoe@mail.com",
+  "courseCode": 9123
+}
+
+##### Teachers - [POST] {String:username}/enroll/{subjectCode} enrollStudentInSubject()
+POST http://localhost:8080/academics/api/teachers/rmartinho/associate/9416
+Accept: application/json
+
+##### Teachers - [POST] {String:username}/dissociate/{subjectCode} unrollStudentFromSubject()
+POST http://localhost:8080/academics/api/teachers/rmartinho/dissociate/9416
+Accept: application/json
+
+
 
 
 
@@ -41,3 +96,32 @@ Content-Type: application/json
   "code": 9147,
   "name": "Gestão (D)"
 }
+
+##### Courses - [PUT] createNewCourse()
+PUT http://localhost:8080/academics/api/courses/9119
+Content-Type: application/json
+
+{
+  "code": 123,
+  "name": "EI"
+}
+
+
+
+
+##### Subjects - [GET] {long:subjectCode} getSubjectStudents()
+GET http://localhost:8080/academics/api/subjects/2321/students
+Accept: application/json
+
+##### Subjects - [GET] {long:subjectCode} getSubjectStudents() --> ERROR NO STUDENTS IN SUBJECT
+GET http://localhost:8080/academics/api/subjects/3734/students
+Accept: application/json
+
+##### Subjects - [GET] {long:subjectCode} getSubjectStudents() --> ERROR NO SUBJECT FOUND
+GET http://localhost:8080/academics/api/subjects/123/students
+Accept: application/json
+
+
+##### Subjects - [GET] {long:subjectCode} getSubjectStudents()
+GET http://localhost:8080/academics/api/subjects/2178/teachers
+Accept: application/json

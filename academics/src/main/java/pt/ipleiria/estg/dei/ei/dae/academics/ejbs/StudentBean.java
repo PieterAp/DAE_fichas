@@ -2,7 +2,6 @@ package pt.ipleiria.estg.dei.ei.dae.academics.ejbs;
 
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.NoResultException;
 import jakarta.persistence.PersistenceContext;
 import org.hibernate.Hibernate;
 import pt.ipleiria.estg.dei.ei.dae.academics.entities.Course;
@@ -10,7 +9,6 @@ import pt.ipleiria.estg.dei.ei.dae.academics.entities.Student;
 import pt.ipleiria.estg.dei.ei.dae.academics.entities.Subject;
 
 import java.util.List;
-import java.util.Objects;
 
 @Stateless
 public class StudentBean {
@@ -35,43 +33,54 @@ public class StudentBean {
     public Student findStudentWithSubjects(String username) {
         Student student = find(username);
 
-        if (student == null || student.getSubjects().isEmpty()) {
+        // student not found
+        if (student == null) {
             return null;
-            //todo: not best approach, can lead to 2 scenarios:
-            // - User does not exist
-            // - User does exist but has no subjects
         }
 
+        // student has no subjects
+        /*
+        if (student.getSubjects().isEmpty()) {
+            return new Student();
+        }
+         */
+
+        // lazy load subjects from student
         Hibernate.initialize(student.getSubjects());
         return student;
     }
 
     public List<Student> getAll() {
-        // remember, maps to: “SELECT s FROM Student s ORDER BY s.name”
         return entityManager.createNamedQuery("getAllStudents", Student.class).getResultList();
     }
 
-    public void enrollStudentInSubject (String username, long subjectCode) {
+    public boolean enrollStudentInSubject (String username, long subjectCode) {
         Student foundStudent = entityManager.find(Student.class, username);
         Subject foundSubject = entityManager.find(Subject.class, subjectCode);
 
         if (foundStudent != null && foundSubject != null) {
             if (foundStudent.getCourse().equals(foundSubject.getCourse())) {
                 foundSubject.addStudent(foundStudent);
+                foundStudent.addSubject(foundSubject); //important! to make sure this is kept in memory!
+                return true;
             }
+            return false;
         }
+        return false;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        StudentBean that = (StudentBean) o;
-        return Objects.equals(entityManager, that.entityManager);
-    }
+    public boolean unrollStudentFromSubject (String username, long subjectCode) {
+        Student foundStudent = entityManager.find(Student.class, username);
+        Subject foundSubject = entityManager.find(Subject.class, subjectCode);
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(entityManager);
+        if (foundStudent != null && foundSubject != null) {
+            if (foundStudent.getSubjects().contains(foundSubject)) {
+                foundSubject.removeStudent(foundStudent);
+                foundStudent.removeSubject(foundSubject); //important! to make sure this is kept in memory!
+                return true;
+            }
+            return false;
+        }
+        return false;
     }
 }

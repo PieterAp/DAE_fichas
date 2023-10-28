@@ -4,6 +4,7 @@ import jakarta.ejb.EJB;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import pt.ipleiria.estg.dei.ei.dae.academics.dtos.CourseDTO;
 import pt.ipleiria.estg.dei.ei.dae.academics.dtos.StudentDTO;
 import pt.ipleiria.estg.dei.ei.dae.academics.dtos.SubjectDTO;
 import pt.ipleiria.estg.dei.ei.dae.academics.ejbs.StudentBean;
@@ -35,8 +36,8 @@ public class StudentService {
             return Response.ok(toDTO(student)).build();
         }
         return Response.status(Response.Status.NOT_FOUND)
-            .entity("ERROR_FINDING_STUDENT")
-            .build();
+                .entity("ERROR_FINDING_STUDENT")
+                .build();
     }
 
     @GET
@@ -48,20 +49,21 @@ public class StudentService {
             return Response.ok(dtos).build();
         }
         return Response.status(Response.Status.NOT_FOUND)
-            .entity("ERROR_FINDING_STUDENT")
-            .build();
+                .entity("ERROR_FINDING_STUDENT")
+                .build();
     }
     //endregion
 
+    //region POST
     @POST
     @Path("/")
     public Response createNewStudent (StudentDTO studentDTO){
         studentBean.create(
-            studentDTO.getUsername(),
-            studentDTO.getPassword(),
-            studentDTO.getName(),
-            studentDTO.getEmail(),
-            studentDTO.getCourseCode()
+                studentDTO.getUsername(),
+                studentDTO.getPassword(),
+                studentDTO.getName(),
+                studentDTO.getEmail(),
+                studentDTO.getCourseCode()
         );
 
         Student newStudent = studentBean.find(studentDTO.getUsername());
@@ -71,16 +73,41 @@ public class StudentService {
         return Response.status(Response.Status.CREATED).entity(toDTO(newStudent)).build();
     }
 
+    @POST
+    @Path("{username}/enroll/{subjectCode}")
+    public Response enrollStudentInSubject(@PathParam("username") String username, @PathParam("subjectCode") long subjectCode) {
+        if (studentBean.enrollStudentInSubject(username, subjectCode)) {
+            return Response.status(Response.Status.OK).build();
+        }
+
+        return Response.status(Response.Status.NOT_FOUND)
+                .entity("ERROR_FINDING_COURSE")
+                .build();
+    }
+
+    @POST
+    @Path("{username}/unroll/{subjectCode}")
+    public Response unrollStudentFromSubject(@PathParam("username") String username, @PathParam("subjectCode") long subjectCode) {
+        if (studentBean.unrollStudentFromSubject(username, subjectCode)) {
+            return Response.status(Response.Status.OK).build();
+        }
+
+        return Response.status(Response.Status.NOT_FOUND)
+                .entity("ERROR_FINDING_COURSE")
+                .build();
+    }
+    //endregion
+
     //region DTO conversion >>>> StudentDTO
     // Converts an entity Student to a DTO Student class
     private StudentDTO toDTO(Student student) {
         return new StudentDTO(
-            student.getUsername(),
-            student.getPassword(),
-            student.getName(),
-            student.getEmail(),
-            student.getCourse().getCode(),
-            student.getCourse().getName()
+                student.getUsername(),
+                student.getPassword(),
+                student.getName(),
+                student.getEmail(),
+                student.getCourse().getCode(),
+                student.getCourse().getName()
         );
     }
 

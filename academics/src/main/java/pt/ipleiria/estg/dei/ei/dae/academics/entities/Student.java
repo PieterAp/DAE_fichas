@@ -1,21 +1,21 @@
 package pt.ipleiria.estg.dei.ei.dae.academics.entities;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 
 import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @NamedQueries({
-    @NamedQuery(
-        name = "getAllStudents",
-        query = "SELECT s " +
-                "FROM Student s " +
-                "ORDER BY s.name" // JPQL
-    )
+        @NamedQuery(
+                name = "getAllStudents",
+                query = "SELECT s " +
+                        "FROM Student s " +
+                        "ORDER BY s.name" // JPQL
+        )
 })
 public class Student extends User implements Serializable {
 
@@ -55,10 +55,18 @@ public class Student extends User implements Serializable {
     }
 
     public void addSubject (Subject subject) {
+        if (this.subjects.contains(subject)) {
+            return;
+        }
+
         this.subjects.add(subject);
     }
 
     public void removeSubject (Subject subject) {
+        if (!this.subjects.contains(subject)) {
+            return;
+        }
+
         this.subjects.remove(subject);
     }
 }

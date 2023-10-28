@@ -55,7 +55,7 @@ public class ConfigBean {
         studentBean.enrollStudentInSubject("piet",3640);
         studentBean.create("ma97","aww3agd","Emma","emma@my.ipleiria.pt",9119);
         studentBean.enrollStudentInSubject("ma97",2321);
-        studentBean.enrollStudentInSubject("ma97",2321);
+        studentBean.enrollStudentInSubject("ma97",2178);
         // EA
         studentBean.create("cattzp","C$wLZjs","Catarina","catarina@my.ipleiria.pt",9741);
         studentBean.enrollStudentInSubject("cattzp",4684);
@@ -70,6 +70,9 @@ public class ConfigBean {
 
         administratorBean.create("jRibeiro","jroisbeiro", "José","jribeiro@my.ipleiria.pt");
         teacherBean.create("rmartinho","maarter","Ricardo","rmartinho@my.ipleiria.pt","A.S.0.1");
+        //todo: solve this problem
+        teacherBean.associateTeacherToSubject("rmartinho", 2178);
+        teacherBean.associateTeacherToSubject("rmartinho", 5045);
 
         System.out.println("END populateDB");
     }
