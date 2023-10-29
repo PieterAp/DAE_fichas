@@ -4,11 +4,13 @@ import jakarta.ejb.EJB;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import pt.ipleiria.estg.dei.ei.dae.academics.dtos.StudentDTO;
 import pt.ipleiria.estg.dei.ei.dae.academics.dtos.SubjectDTO;
 import pt.ipleiria.estg.dei.ei.dae.academics.dtos.TeacherDTO;
 import pt.ipleiria.estg.dei.ei.dae.academics.ejbs.TeacherBean;
 import pt.ipleiria.estg.dei.ei.dae.academics.entities.Subject;
 import pt.ipleiria.estg.dei.ei.dae.academics.entities.Teacher;
+import pt.ipleiria.estg.dei.ei.dae.academics.utils.DTOconverter;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -25,7 +27,7 @@ public class TeacherService {
     @GET
     @Path("/")
     public List<TeacherDTO> getAllTeachers() {
-        return toDTOs(teacherBean.getAll());
+        return DTOconverter.teacherDTOS(teacherBean.getAll());
     }
 
     @GET
@@ -33,7 +35,7 @@ public class TeacherService {
     public Response getTeacherDetails(@PathParam("username") String username) {
         Teacher teacher = teacherBean.find(username);
         if (teacher != null) {
-            return Response.ok(toDTO(teacher)).build();
+            return Response.ok(DTOconverter.toDTO(teacher)).build();
         }
         return Response.status(Response.Status.NOT_FOUND)
                 .entity("ERROR_FINDING_TEACHER")
@@ -45,7 +47,7 @@ public class TeacherService {
     public Response getTeacherSubjects(@PathParam("username") String username) {
         Teacher teacher = teacherBean.findTeacherWithSubjects(username);
         if (teacher != null) {
-            var dtos = subjectsToDTOs(teacher.getSubjects());
+            var dtos = DTOconverter.subjectsToDTOs(teacher.getSubjects());
             return Response.ok(dtos).build();
         }
         return Response.status(Response.Status.NOT_FOUND)
@@ -70,7 +72,7 @@ public class TeacherService {
 
         if(newTeacher == null)
             return Response.status(Response.Status.BAD_REQUEST).build();
-        return Response.status(Response.Status.CREATED).entity(toDTO(newTeacher)).build();
+        return Response.status(Response.Status.CREATED).entity(DTOconverter.toDTO(newTeacher)).build();
     }
 
     @POST
@@ -98,38 +100,17 @@ public class TeacherService {
     }
     //endregion
 
-    //region DTO conversion >>>> TeacherDTO
-    // Converts an entity Student to a DTO Student class
-    private TeacherDTO toDTO(Teacher teacher) {
-        return new TeacherDTO(
-                teacher.getUsername(),
-                teacher.getPassword(),
-                teacher.getName(),
-                teacher.getEmail(),
-                teacher.getOffice()
-        );
+    @PUT
+    @Path("{username}")
+    public Response updateTeacher(@PathParam("username") String username, TeacherDTO teacherDTO) {
+        teacherBean.updateTeacher();
+        return Response.status(Response.Status.OK).build();
     }
 
-    // converts an entire list of entities into a list of DTOs
-    private List<TeacherDTO> toDTOs(List<Teacher> teachers) {
-        return teachers.stream().map(this::toDTO).collect(Collectors.toList());
+    @DELETE
+    @Path("{username}")
+    public Response deleteTeacher(@PathParam("username") String username) {
+        teacherBean.deleteTeacher(username);
+        return Response.status(Response.Status.OK).build();
     }
-    //endregion
-
-    //region DTO conversion >>>> SubjectDTO
-    private SubjectDTO toDTO(Subject subject) {
-        return new SubjectDTO(
-                subject.getCode(),
-                subject.getName(),
-                subject.getCourse().getCode(),
-                subject.getCourse().getName(),
-                subject.getCourseYear(),
-                subject.getScholarYear()
-        );
-    }
-
-    private List<SubjectDTO> subjectsToDTOs(List<Subject> subjects) {
-        return subjects.stream().map(this::toDTO).collect(Collectors.toList());
-    }
-    //endregion
 }

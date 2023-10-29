@@ -68,4 +68,17 @@ public class TeacherBean {
         }
         return false;
     }
+
+    public void updateTeacher(String username, String email, String name, String password) {
+        Student student = entityManager.find(Student.class, username);
+        student.setEmail(email);
+        student.setName(name);
+        student.setPassword(password);
+        entityManager.merge(student);
+    }
+
+    public void deleteTeacher(String username) {
+        Teacher teacher = entityManager.find(Teacher.class, username);
+        entityManager.remove(teacher);
+    }
 }

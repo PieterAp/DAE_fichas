@@ -12,6 +12,7 @@ import pt.ipleiria.estg.dei.ei.dae.academics.ejbs.CourseBean;
 import pt.ipleiria.estg.dei.ei.dae.academics.entities.Course;
 import pt.ipleiria.estg.dei.ei.dae.academics.entities.Student;
 import pt.ipleiria.estg.dei.ei.dae.academics.entities.Subject;
+import pt.ipleiria.estg.dei.ei.dae.academics.utils.DTOconverter;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -28,7 +29,7 @@ public class CourseService {
     @GET // means: to call this endpoint, we need to use the HTTP GET method
     @Path("/") // means: the relative url path is “/api/courses/”
     public List<CourseDTO> getAllCourses() {
-        return toDTOs(courseBean.getAllCourses());
+        return DTOconverter.coursesToDTOs(courseBean.getAllCourses());
     }
 
     @GET
@@ -37,7 +38,7 @@ public class CourseService {
         Course course = courseBean.find(courseCode);
 
         if (course != null) {
-            return Response.ok(toDTO(course)).build();
+            return Response.ok(DTOconverter.toDTO(course)).build();
         }
         return Response.status(Response.Status.NOT_FOUND)
                 .entity("ERROR_FINDING_COURSE")
@@ -51,7 +52,7 @@ public class CourseService {
         List<Subject> subjects = courseBean.getSubjects(courseCode);
 
         if (!subjects.isEmpty()) {
-            return Response.ok(subjectsToDTOs(subjects)).build();
+            return Response.ok(DTOconverter.subjectsToDTOs(subjects)).build();
         }
         return Response.status(Response.Status.NOT_FOUND)
                 .entity("ERROR_FINDING_COURSE")
@@ -65,7 +66,7 @@ public class CourseService {
         List<Student> students = courseBean.getStudents(courseCode);
 
         if (!students.isEmpty()) {
-            return Response.ok(studentsToDTOs(students)).build();
+            return Response.ok(DTOconverter.studentsToDTOs(students)).build();
         }
         return Response.status(Response.Status.NOT_FOUND)
                 .entity("ERROR_FINDING_COURSE")
@@ -85,10 +86,9 @@ public class CourseService {
 
         if(newCourse == null)
             return Response.status(Response.Status.BAD_REQUEST).build();
-        return Response.status(Response.Status.CREATED).entity(toDTO(newCourse)).build();
+        return Response.status(Response.Status.CREATED).entity(DTOconverter.toDTO(newCourse)).build();
     }
 
-    //update
     @PUT
     @Path("{courseCode}")
     public Response updateCourse(@PathParam("courseCode") long courseCode, CourseDTO courseDTO) {
@@ -106,55 +106,4 @@ public class CourseService {
                 .entity("CONFLICT_DELETING")
                 .build();
     }
-
-    //region DTO conversion
-    // Converts an entity Course to a DTO Course class
-    private CourseDTO toDTO(Course course) {
-        return new CourseDTO(
-                course.getCode(),
-                course.getName()
-        );
-    }
-
-    // converts an entire list of entities into a list of DTOs
-    private List<CourseDTO> toDTOs(List<Course> courses) {
-        return courses.stream().map(this::toDTO).collect(Collectors.toList());
-    }
-    //endregion
-
-    //region DTO conversion >>>> SubjectDTO
-    private SubjectDTO toDTO(Subject subject) {
-        return new SubjectDTO(
-                subject.getCode(),
-                subject.getName(),
-                subject.getCourse().getCode(),
-                subject.getCourse().getName(),
-                subject.getCourseYear(),
-                subject.getScholarYear()
-        );
-    }
-
-    private List<SubjectDTO> subjectsToDTOs(List<Subject> subjects) {
-        return subjects.stream().map(this::toDTO).collect(Collectors.toList());
-    }
-    //endregion
-
-    //region DTO conversion >>>> StudentDTO
-    // Converts an entity Student to a DTO Student class
-    private StudentDTO toDTO(Student student) {
-        return new StudentDTO(
-                student.getUsername(),
-                student.getPassword(),
-                student.getName(),
-                student.getEmail(),
-                student.getCourse().getCode(),
-                student.getCourse().getName()
-        );
-    }
-
-    // converts an entire list of entities into a list of DTOs
-    private List<StudentDTO> studentsToDTOs(List<Student> students) {
-        return students.stream().map(this::toDTO).collect(Collectors.toList());
-    }
-    //endregion
 }

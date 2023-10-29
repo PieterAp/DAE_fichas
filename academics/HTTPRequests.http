@@ -48,6 +48,23 @@ Accept: application/json
 POST http://localhost:8080/academics/api/students/piet/unroll/3734
 Accept: application/json
 
+##### StudentService - updateStudent(String:usernamem, StudentDTO:studentDTO)
+##### Path: "/api/students/<username>"
+PUT http://localhost:8080/academics/api/students/gzTag
+Content-Type: application/json
+
+{
+  "username": "doesNotChange",
+  "password": "tiagoagaweh",
+  "name": "das habben ich nich verstanden",
+  "email": "tiagoagaweh@gmail.com",
+  "courseCode": 561456456465
+}
+
+##### StudentService - deleteStudent(String:username)
+##### Path: "/api/students/<username>"
+DELETE http://localhost:8080/academics/api/students/inesmaria
+Content-Type: application/json
 
 
 
@@ -142,6 +159,20 @@ Content-Type: application/json
 
 
 
+
+##### SubjectService - createNewSubject(SubjectDTO:subjectDTO)
+##### Path: "/api/subjects"
+POST http://localhost:8080/academics/api/subjects
+Content-Type: application/json
+
+{
+  "code": 1234,
+  "name": "Segurança de Informação",
+  "courseCode": 9119,
+  "courseYear": 2023,
+  "scholarYear": "2023/2024"
+}
+
 ##### SubjectService - getSubjectStudents(long:subjectCode)
 ##### Path: "/api/subjects/<subjectCode>/students"
 GET http://localhost:8080/academics/api/subjects/2321/students
@@ -165,3 +196,8 @@ Accept: application/json
 ##### Path: "/api/subjects/<subjectCode>/teachers"
 GET http://localhost:8080/academics/api/subjects/2178/teachers
 Accept: application/json
+
+##### SubjectService - deleteSubject()
+##### Path: "/api/subjects/<subjectCode>"
+DELETE http://localhost:8080/academics/api/subjects/2321
+Content-Type: application/json

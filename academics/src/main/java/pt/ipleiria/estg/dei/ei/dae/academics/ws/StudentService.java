@@ -10,6 +10,7 @@ import pt.ipleiria.estg.dei.ei.dae.academics.dtos.SubjectDTO;
 import pt.ipleiria.estg.dei.ei.dae.academics.ejbs.StudentBean;
 import pt.ipleiria.estg.dei.ei.dae.academics.entities.Student;
 import pt.ipleiria.estg.dei.ei.dae.academics.entities.Subject;
+import pt.ipleiria.estg.dei.ei.dae.academics.utils.DTOconverter;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -25,7 +26,7 @@ public class StudentService {
     @GET // means: to call this endpoint, we need to use the HTTP GET method
     @Path("/") // means: the relative url path is “/api/students/”
     public List<StudentDTO> getAllStudents() {
-        return toDTOs(studentBean.getAll());
+        return DTOconverter.studentsToDTOs(studentBean.getAll());
     }
 
     @GET
@@ -33,7 +34,7 @@ public class StudentService {
     public Response getStudentDetails(@PathParam("username") String username) {
         Student student = studentBean.find(username);
         if (student != null) {
-            return Response.ok(toDTO(student)).build();
+            return Response.ok(DTOconverter.toDTO(student)).build();
         }
         return Response.status(Response.Status.NOT_FOUND)
                 .entity("ERROR_FINDING_STUDENT")
@@ -45,7 +46,7 @@ public class StudentService {
     public Response getStudentSubjects(@PathParam("username") String username) {
         Student student = studentBean.findStudentWithSubjects(username);
         if (student != null) {
-            var dtos = subjectsToDTOs(student.getSubjects());
+            var dtos = DTOconverter.subjectsToDTOs(student.getSubjects());
             return Response.ok(dtos).build();
         }
         return Response.status(Response.Status.NOT_FOUND)
@@ -70,7 +71,7 @@ public class StudentService {
 
         if(newStudent == null)
             return Response.status(Response.Status.BAD_REQUEST).build();
-        return Response.status(Response.Status.CREATED).entity(toDTO(newStudent)).build();
+        return Response.status(Response.Status.CREATED).entity(DTOconverter.toDTO(newStudent)).build();
     }
 
     @POST
@@ -98,39 +99,17 @@ public class StudentService {
     }
     //endregion
 
-    //region DTO conversion >>>> StudentDTO
-    // Converts an entity Student to a DTO Student class
-    private StudentDTO toDTO(Student student) {
-        return new StudentDTO(
-                student.getUsername(),
-                student.getPassword(),
-                student.getName(),
-                student.getEmail(),
-                student.getCourse().getCode(),
-                student.getCourse().getName()
-        );
+    @PUT
+    @Path("{username}")
+    public Response updateStudent(@PathParam("username") String username, StudentDTO studentDTO) {
+        studentBean.updateStudent(username, studentDTO.getEmail(), studentDTO.getName(), studentDTO.getPassword());
+        return Response.status(Response.Status.OK).build();
     }
 
-    // converts an entire list of entities into a list of DTOs
-    private List<StudentDTO> toDTOs(List<Student> students) {
-        return students.stream().map(this::toDTO).collect(Collectors.toList());
+    @DELETE
+    @Path("{username}")
+    public Response deleteStudent(@PathParam("username") String username) {
+        studentBean.deleteStudent(username);
+        return Response.status(Response.Status.OK).build();
     }
-    //endregion
-
-    //region DTO conversion >>>> SubjectDTO
-    private SubjectDTO toDTO(Subject subject) {
-        return new SubjectDTO(
-                subject.getCode(),
-                subject.getName(),
-                subject.getCourse().getCode(),
-                subject.getCourse().getName(),
-                subject.getCourseYear(),
-                subject.getScholarYear()
-        );
-    }
-
-    private List<SubjectDTO> subjectsToDTOs(List<Subject> subjects) {
-        return subjects.stream().map(this::toDTO).collect(Collectors.toList());
-    }
-    //endregion
 }

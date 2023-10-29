@@ -60,4 +60,17 @@ public class SubjectBean {
         return subject;
     }
 
+    public void updateSubject(long code, String name, long courseYear, String scholarYear) {
+        Subject subject = entityManager.find(Subject.class, code);
+        subject.setName(name);
+        subject.setCourseYear(courseYear);
+        subject.setScholarYear(scholarYear);
+        entityManager.merge(subject);
+    }
+
+    public void deleteSubject(long code) {
+        Subject subject = entityManager.find(Subject.class, code);
+        entityManager.remove(subject);
+    }
+
 }

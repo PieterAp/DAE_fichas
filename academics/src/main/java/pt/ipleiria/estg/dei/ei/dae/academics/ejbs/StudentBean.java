@@ -83,4 +83,17 @@ public class StudentBean {
         }
         return false;
     }
+
+    public void updateStudent(String username, String email, String name, String password) {
+        Student student = entityManager.find(Student.class, username);
+        student.setEmail(email);
+        student.setName(name);
+        student.setPassword(password);
+        entityManager.merge(student);
+    }
+
+    public void deleteStudent(String username) {
+        Student student = entityManager.find(Student.class, username);
+        entityManager.remove(student);
+    }
 }
