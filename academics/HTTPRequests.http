@@ -1,24 +1,32 @@
-##### Students - [GET] getAllStudents()
+##### StudentService - getAllStudents()
+##### Path: "/api/students"
 GET http://localhost:8080/academics/api/students
 Accept: application/json
 
-##### Students - [GET] {String:username} getStudentDetails()
+##### StudentService - getStudentDetails(String:username)
+##### Path: "/api/students/<username>"
 GET http://localhost:8080/academics/api/students/piet
 Accept: application/json
 
-##### Students - [GET] {String:username} getStudentDetails()
+##### StudentService - getStudentSubjects(String:username)
+##### Path: "/api/students/<username>/subjects"
 GET http://localhost:8080/academics/api/students/piet/subjects
 Accept: application/json
 
-##### Students - [GET] {String:username} getStudentDetails() (WILL FAIL DUE TO STUDENT NOT EXISTING)
+//!WILL FAIL, THIS STUDENT DOES NOT EXIST
+##### StudentService - getStudentSubjects(String:username)
+##### Path: "/api/students/<username>/subjects"
 GET http://localhost:8080/academics/api/students/avct/subjects
 Accept: application/json
 
-##### Students - [GET] {String:username} getStudentDetails() (WILL FAIL DUE TO STUDENT NOT HAVING SUBJECTS)
+//!WILL RETURN AN EMPTY ARRAY, THIS STUDENT HAS NO SUBJECTS
+##### StudentService - getStudentSubjects(String:username)
+##### Path: "/api/students/<username>/subjects"
 GET http://localhost:8080/academics/api/students/inesmaria/subjects
 Accept: application/json
 
-##### Students - [POST] createNewStudent()
+##### StudentService - createNewStudent(StudentDTO:studentDTO)
+##### Path: "/api/students"
 POST http://localhost:8080/academics/api/students
 Content-Type: application/json
 
@@ -30,37 +38,37 @@ Content-Type: application/json
   "courseCode": 9123
 }
 
-##### Students - [POST] {String:username}/enroll/{subjectCode} enrollStudentInSubject()
+##### StudentService - enrollStudentInSubject(String:username, long:subjectCode)
+##### Path: "/api/students/<username>/enroll/<subjectCode>"
 POST http://localhost:8080/academics/api/students/piet/enroll/3734
 Accept: application/json
 
-##### Students - [POST] {String:username}/unroll/{subjectCode} unrollStudentFromSubject()
+##### StudentService - unrollStudentFromSubject(String:username, long:subjectCode)
+##### Path: "/api/students/<username>/unroll/<subjectCode>"
 POST http://localhost:8080/academics/api/students/piet/unroll/3734
 Accept: application/json
 
 
 
-##### Teachers - [GET] getAllStudents()
+
+
+##### TeacherService - getAllTeachers()
+##### Path: "/api/teachers"
 GET http://localhost:8080/academics/api/teachers
 Accept: application/json
 
-##### Teachers - [GET] {String:username} getStudentDetails()
+##### TeacherService - getTeacherDetails(String:username)
+##### Path: "/api/teachers/<username>"
 GET http://localhost:8080/academics/api/teachers/rmartinho
 Accept: application/json
 
-##### Teachers - [GET] {String:username} getStudentDetails()
+##### TeacherService - getTeacherSubjects(String:username)
+##### Path: "/api/teachers/<username>/subjects"
 GET http://localhost:8080/academics/api/teachers/rmartinho/subjects
 Accept: application/json
 
-##### Teachers - [GET] {String:username} getStudentDetails() (WILL FAIL DUE TO STUDENT NOT EXISTING)
-GET http://localhost:8080/academics/api/teachers/avct/subjects
-Accept: application/json
-
-##### Teachers - [GET] {String:username} getStudentDetails() (WILL FAIL DUE TO STUDENT NOT HAVING SUBJECTS)
-GET http://localhost:8080/academics/api/teachers/inesmaria/subjects
-Accept: application/json
-
-##### Teachers - [POST] createNewStudent()
+##### TeacherService - createNewTeacher(TeacherDTO:teacherDTO)
+##### Path: "/api/teachers"
 POST http://localhost:8080/academics/api/teachers
 Content-Type: application/json
 
@@ -72,11 +80,13 @@ Content-Type: application/json
   "courseCode": 9123
 }
 
-##### Teachers - [POST] {String:username}/enroll/{subjectCode} enrollStudentInSubject()
+##### TeacherService - associateTeacherToSubject(String:username, long:subjectCode)
+##### Path: "/api/teachers/<username>/associate/<subjectCode>"
 POST http://localhost:8080/academics/api/teachers/rmartinho/associate/9416
 Accept: application/json
 
-##### Teachers - [POST] {String:username}/dissociate/{subjectCode} unrollStudentFromSubject()
+##### TeacherService - dissociateTeacherToSubject(String:username, long:subjectCode)
+##### Path: "/api/teachers/<username>/dissociate/<subjectCode>"
 POST http://localhost:8080/academics/api/teachers/rmartinho/dissociate/9416
 Accept: application/json
 
@@ -84,11 +94,28 @@ Accept: application/json
 
 
 
-##### Courses - [GET] getAllCourses()
+##### CourseService - getAllCourses()
+##### Path: "/api/courses"
 GET http://localhost:8080/academics/api/courses
 Accept: application/json
 
-##### Courses - [POST] createNewCourse()
+##### CourseService - getCourseDetails(long:courseCode)
+##### Path: "/api/courses/<courseCode>"
+GET http://localhost:8080/academics/api/courses/9119
+Accept: application/json
+
+##### CourseService - getCourseSubjects(long:courseCode)
+##### Path: "/api/courses/<courseCode>/subjects"
+GET http://localhost:8080/academics/api/courses/9119/subjects
+Accept: application/json
+
+##### CourseService - getCourseStudents(long:courseCode)
+##### Path: "/api/courses/<courseCode>/students"
+GET http://localhost:8080/academics/api/courses/9119/students
+Accept: application/json
+
+##### CourseService - createNewCourse(CourseDTO:courseDTO)
+##### Path: "/api/courses"
 POST http://localhost:8080/academics/api/courses
 Content-Type: application/json
 
@@ -97,7 +124,8 @@ Content-Type: application/json
   "name": "Gestão (D)"
 }
 
-##### Courses - [PUT] createNewCourse()
+##### CourseService - updateCourse(CourseDTO:courseDTO)
+##### Path: "/api/courses/<courseCode>"
 PUT http://localhost:8080/academics/api/courses/9119
 Content-Type: application/json
 
@@ -106,22 +134,34 @@ Content-Type: application/json
   "name": "EI"
 }
 
+##### CourseService - deleteCourse()
+##### Path: "/api/courses/<courseCode>"
+DELETE http://localhost:8080/academics/api/courses/9119
+Content-Type: application/json
 
 
 
-##### Subjects - [GET] {long:subjectCode} getSubjectStudents()
+
+##### SubjectService - getSubjectStudents(long:subjectCode)
+##### Path: "/api/subjects/<subjectCode>/students"
 GET http://localhost:8080/academics/api/subjects/2321/students
 Accept: application/json
 
-##### Subjects - [GET] {long:subjectCode} getSubjectStudents() --> ERROR NO STUDENTS IN SUBJECT
+
+##### SubjectService - getSubjectStudents(long:subjectCode)
+##### Path: "/api/subjects/<subjectCode>/students"
+//!WILL RETURN AN EMPTY ARRAY, THERE ARE NO STUDENTS IN THIS SUBJECT
 GET http://localhost:8080/academics/api/subjects/3734/students
 Accept: application/json
 
-##### Subjects - [GET] {long:subjectCode} getSubjectStudents() --> ERROR NO SUBJECT FOUND
+##### SubjectService - getSubjectStudents(long:subjectCode)
+##### Path: "/api/subjects/<subjectCode>/students"
+//!WILL FAIL, THIS SUBJECT DOES NOT EXIST
 GET http://localhost:8080/academics/api/subjects/123/students
 Accept: application/json
 
 
-##### Subjects - [GET] {long:subjectCode} getSubjectStudents()
+##### SubjectService - getSubjectTeachers(long:subjectCode)
+##### Path: "/api/subjects/<subjectCode>/teachers"
 GET http://localhost:8080/academics/api/subjects/2178/teachers
 Accept: application/json
