@@ -103,7 +103,7 @@ public class TeacherService {
     @PUT
     @Path("{username}")
     public Response updateTeacher(@PathParam("username") String username, TeacherDTO teacherDTO) {
-        teacherBean.updateTeacher();
+        teacherBean.updateTeacher(username,teacherDTO.getEmail(),teacherDTO.getName(),teacherDTO.getPassword());
         return Response.status(Response.Status.OK).build();
     }
 
