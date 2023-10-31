@@ -4,16 +4,12 @@ import jakarta.ejb.EJB;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-import pt.ipleiria.estg.dei.ei.dae.academics.dtos.StudentDTO;
-import pt.ipleiria.estg.dei.ei.dae.academics.dtos.SubjectDTO;
 import pt.ipleiria.estg.dei.ei.dae.academics.dtos.TeacherDTO;
 import pt.ipleiria.estg.dei.ei.dae.academics.ejbs.TeacherBean;
-import pt.ipleiria.estg.dei.ei.dae.academics.entities.Subject;
 import pt.ipleiria.estg.dei.ei.dae.academics.entities.Teacher;
 import pt.ipleiria.estg.dei.ei.dae.academics.utils.DTOconverter;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Path("teachers") // relative url web path for this service
 @Produces({MediaType.APPLICATION_JSON}) // injects header “Content-Type: application/json”
@@ -90,7 +86,7 @@ public class TeacherService {
     @POST
     @Path("{username}/dissociate/{subjectCode}")
     public Response dissociateTeacherToSubject(@PathParam("username") String username, @PathParam("subjectCode") long subjectCode) {
-        if (teacherBean.dissociateTeacherToSubject(username, subjectCode)) {
+        if (teacherBean.dissociateTeacherFromSubject(username, subjectCode)) {
             return Response.status(Response.Status.OK).build();
         }
 
@@ -103,7 +99,7 @@ public class TeacherService {
     @PUT
     @Path("{username}")
     public Response updateTeacher(@PathParam("username") String username, TeacherDTO teacherDTO) {
-        teacherBean.updateTeacher(username,teacherDTO.getEmail(),teacherDTO.getName(),teacherDTO.getPassword());
+        teacherBean.updateTeacher(username,teacherDTO.getEmail(),teacherDTO.getName(),teacherDTO.getPassword(),teacherDTO.getOffice());
         return Response.status(Response.Status.OK).build();
     }
 

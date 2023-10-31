@@ -32,7 +32,7 @@ public class Course {
     List<Student> students;
 
     // orphanRemoval = true
-    @OneToMany(mappedBy = "course", cascade = CascadeType.REMOVE)
+        @OneToMany(mappedBy = "course", cascade = CascadeType.REMOVE)
     List<Subject> subjects;
 
     public Course() {

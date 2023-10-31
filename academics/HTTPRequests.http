@@ -102,11 +102,28 @@ Content-Type: application/json
 POST http://localhost:8080/academics/api/teachers/rmartinho/associate/9416
 Accept: application/json
 
-##### TeacherService - dissociateTeacherToSubject(String:username, long:subjectCode)
+##### TeacherService - dissociateTeacherFromSubject(String:username, long:subjectCode)
 ##### Path: "/api/teachers/<username>/dissociate/<subjectCode>"
 POST http://localhost:8080/academics/api/teachers/rmartinho/dissociate/9416
 Accept: application/json
 
+##### TeacherService - updateTeacher(String:username, TeacherDTO:teacherDTO)
+##### Path: "/api/teachers/<username>"
+PUT http://localhost:8080/academics/api/teachers/rmartinho
+Content-Type: application/json
+
+{
+  "username": "does not matter to this case",
+  "password": "123",
+  "name": "Ricardo J. Martinho",
+  "email": "martinho.ricardo@gmail.com",
+  "office": "A.S.2.8"
+}
+
+##### TeacherService - deleteTeacher(String:username)
+##### Path: "/api/teachers/<username>"
+DELETE http://localhost:8080/academics/api/teachers/rmartinho
+Content-Type: application/json
 
 
 
@@ -190,7 +207,6 @@ Accept: application/json
 //!WILL FAIL, THIS SUBJECT DOES NOT EXIST
 GET http://localhost:8080/academics/api/subjects/123/students
 Accept: application/json
-
 
 ##### SubjectService - getSubjectTeachers(long:subjectCode)
 ##### Path: "/api/subjects/<subjectCode>/teachers"

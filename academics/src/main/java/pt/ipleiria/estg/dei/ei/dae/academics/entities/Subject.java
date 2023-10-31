@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(
@@ -168,5 +169,18 @@ public class Subject implements Serializable {
         }
 
         this.teachers.remove(teacher);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Subject subject = (Subject) o;
+        return code == subject.code;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(code);
     }
 }

@@ -4,10 +4,10 @@ import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.hibernate.Hibernate;
-import pt.ipleiria.estg.dei.ei.dae.academics.entities.Student;
 import pt.ipleiria.estg.dei.ei.dae.academics.entities.Subject;
 import pt.ipleiria.estg.dei.ei.dae.academics.entities.Teacher;
 
+import java.util.LinkedList;
 import java.util.List;
 
 @Stateless
@@ -54,7 +54,7 @@ public class TeacherBean {
         return false;
     }
 
-    public boolean dissociateTeacherToSubject (String username, long subjectCode) {
+    public boolean dissociateTeacherFromSubject(String username, long subjectCode) {
         Teacher foundTeacher = entityManager.find(Teacher.class, username);
         Subject foundSubject = entityManager.find(Subject.class, subjectCode);
 
@@ -69,16 +69,24 @@ public class TeacherBean {
         return false;
     }
 
-    public void updateTeacher(String username, String email, String name, String password) {
-        Student student = entityManager.find(Student.class, username);
-        student.setEmail(email);
-        student.setName(name);
-        student.setPassword(password);
-        entityManager.merge(student);
+    public void updateTeacher(String username, String email, String name, String password, String office) {
+        Teacher teacher = entityManager.find(Teacher.class, username);
+        teacher.setEmail(email);
+        teacher.setName(name);
+        teacher.setPassword(password);
+        teacher.setOffice(office);
+        entityManager.merge(teacher);
     }
 
     public void deleteTeacher(String username) {
         Teacher teacher = entityManager.find(Teacher.class, username);
+
+        Hibernate.initialize(teacher.getSubjects());
+        List<Subject> teacherSubjects = new LinkedList<>(teacher.getSubjects());
+        for (Subject subject: teacherSubjects) {
+            dissociateTeacherFromSubject(username,subject.getCode());
+        }
+
         entityManager.remove(teacher);
     }
 }
