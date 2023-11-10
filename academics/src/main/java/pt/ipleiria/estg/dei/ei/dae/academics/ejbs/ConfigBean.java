@@ -70,7 +70,6 @@ public class ConfigBean {
 
         administratorBean.create("jRibeiro","jroisbeiro", "José","jribeiro@my.ipleiria.pt");
         teacherBean.create("rmartinho","maarter","Ricardo","rmartinho@my.ipleiria.pt","A.S.0.1");
-        //todo: solve this problem
         teacherBean.associateTeacherToSubject("rmartinho", 2178);
         teacherBean.associateTeacherToSubject("rmartinho", 5045);
 

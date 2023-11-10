@@ -23,6 +23,13 @@ public class SubjectService {
     @EJB
     private SubjectBean subjectBean;
 
+
+    @GET // means: to call this endpoint, we need to use the HTTP GET method
+    @Path("/") // means: the relative url path is “/api/students/”
+    public List<SubjectDTO> getAllSubjects() {
+        return DTOconverter.subjectsToDTOs(subjectBean.getAllSubjects());
+    }
+
     @GET
     @Path("{subjectCode}/students")
     public Response getSubjectStudents(@PathParam("subjectCode") long subjectCode) {
