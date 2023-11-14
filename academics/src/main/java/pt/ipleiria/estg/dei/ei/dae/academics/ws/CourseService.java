@@ -76,7 +76,7 @@ public class CourseService {
 
     @POST
     @Path("/")
-    public Response createNewCourse (CourseDTO courseDTO){
+    public Response createNewCourse (CourseDTO courseDTO) {
         courseBean.create(
                 courseDTO.getCode(),
                 courseDTO.getName()

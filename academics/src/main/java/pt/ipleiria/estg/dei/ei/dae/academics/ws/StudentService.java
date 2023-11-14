@@ -53,6 +53,20 @@ public class StudentService {
                 .entity("ERROR_FINDING_STUDENT")
                 .build();
     }
+
+    @GET
+    @Path("{username}/subjectsAvailable")
+    public Response getAvailableSubjects(@PathParam("username") String username) {
+        List<Subject> subjects = studentBean.subjectsAvailable(username);
+
+        if (subjects != null) {
+            var dtos = DTOconverter.subjectsToDTOs(subjects);
+            return Response.ok(dtos).build();
+        }
+        return Response.status(Response.Status.NOT_FOUND)
+                .entity("ERROR_FINDING_STUDENT")
+                .build();
+    }
     //endregion
 
     //region POST

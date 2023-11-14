@@ -8,6 +8,8 @@ import pt.ipleiria.estg.dei.ei.dae.academics.entities.Course;
 import pt.ipleiria.estg.dei.ei.dae.academics.entities.Student;
 import pt.ipleiria.estg.dei.ei.dae.academics.entities.Subject;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 @Stateless
@@ -48,6 +50,20 @@ public class StudentBean {
         // lazy load subjects from student
         Hibernate.initialize(student.getSubjects());
         return student;
+    }
+
+    public List<Subject> subjectsAvailable (String username) {
+        Student student = find(username);
+        Course studentCourse = student.getCourse();
+
+        Hibernate.initialize(student.getSubjects());
+        Hibernate.initialize(studentCourse.getSubjects());
+
+        List<Subject> studentSubjects = student.getSubjects();
+        List<Subject> courseSubjects = new LinkedList<>(studentCourse.getSubjects());
+        courseSubjects.removeAll(studentSubjects);
+
+        return courseSubjects;
     }
 
     public List<Student> getAll() {
