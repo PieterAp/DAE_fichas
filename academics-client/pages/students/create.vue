@@ -21,7 +21,7 @@
         </div>
         <button type="reset">RESET</button>
         <button type="submit">CREATE</button>
-        <nuxt-link to="/">Return</nuxt-link>
+        <nuxt-link to="/students">Return</nuxt-link>
     </form>
     {{ message }}
 </template>

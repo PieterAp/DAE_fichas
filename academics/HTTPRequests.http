@@ -1,8 +1,32 @@
-##### Students - [GET] getAllStudents()
+##### StudentService - getAllStudents()
+##### Path: "/api/students"
 GET http://localhost:8080/academics/api/students
 Accept: application/json
 
-##### Students - [POST] createNewStudent()
+##### StudentService - getStudentDetails(String:username)
+##### Path: "/api/students/<username>"
+GET http://localhost:8080/academics/api/students/piet
+Accept: application/json
+
+##### StudentService - getStudentSubjects(String:username)
+##### Path: "/api/students/<username>/subjects"
+GET http://localhost:8080/academics/api/students/piet/subjects
+Accept: application/json
+
+//!WILL FAIL, THIS STUDENT DOES NOT EXIST
+##### StudentService - getStudentSubjects(String:username)
+##### Path: "/api/students/<username>/subjects"
+GET http://localhost:8080/academics/api/students/avct/subjects
+Accept: application/json
+
+//!WILL RETURN AN EMPTY ARRAY, THIS STUDENT HAS NO SUBJECTS
+##### StudentService - getStudentSubjects(String:username)
+##### Path: "/api/students/<username>/subjects"
+GET http://localhost:8080/academics/api/students/inesmaria/subjects
+Accept: application/json
+
+##### StudentService - createNewStudent(StudentDTO:studentDTO)
+##### Path: "/api/students"
 POST http://localhost:8080/academics/api/students
 Content-Type: application/json
 
@@ -14,14 +38,118 @@ Content-Type: application/json
   "courseCode": 9123
 }
 
+##### StudentService - enrollStudentInSubject(String:username, long:subjectCode)
+##### Path: "/api/students/<username>/enroll/<subjectCode>"
+POST http://localhost:8080/academics/api/students/piet/enroll/3734
+Accept: application/json
+
+##### StudentService - unrollStudentFromSubject(String:username, long:subjectCode)
+##### Path: "/api/students/<username>/unroll/<subjectCode>"
+POST http://localhost:8080/academics/api/students/piet/unroll/3734
+Accept: application/json
+
+##### StudentService - updateStudent(String:usernamem, StudentDTO:studentDTO)
+##### Path: "/api/students/<username>"
+PUT http://localhost:8080/academics/api/students/gzTag
+Content-Type: application/json
+
+{
+  "username": "doesNotChange",
+  "password": "tiagoagaweh",
+  "name": "das habben ich nich verstanden",
+  "email": "tiagoagaweh@gmail.com",
+  "courseCode": 561456456465
+}
+
+##### StudentService - deleteStudent(String:username)
+##### Path: "/api/students/<username>"
+DELETE http://localhost:8080/academics/api/students/inesmaria
+Content-Type: application/json
 
 
 
-##### Courses - [GET] getAllCourses()
+
+##### TeacherService - getAllTeachers()
+##### Path: "/api/teachers"
+GET http://localhost:8080/academics/api/teachers
+Accept: application/json
+
+##### TeacherService - getTeacherDetails(String:username)
+##### Path: "/api/teachers/<username>"
+GET http://localhost:8080/academics/api/teachers/rmartinho
+Accept: application/json
+
+##### TeacherService - getTeacherSubjects(String:username)
+##### Path: "/api/teachers/<username>/subjects"
+GET http://localhost:8080/academics/api/teachers/rmartinho/subjects
+Accept: application/json
+
+##### TeacherService - createNewTeacher(TeacherDTO:teacherDTO)
+##### Path: "/api/teachers"
+POST http://localhost:8080/academics/api/teachers
+Content-Type: application/json
+
+{
+  "username": "john",
+  "password": "jd",
+  "name": "John Doe",
+  "email": "johndoe@mail.com",
+  "courseCode": 9123
+}
+
+##### TeacherService - associateTeacherToSubject(String:username, long:subjectCode)
+##### Path: "/api/teachers/<username>/associate/<subjectCode>"
+POST http://localhost:8080/academics/api/teachers/rmartinho/associate/9416
+Accept: application/json
+
+##### TeacherService - dissociateTeacherFromSubject(String:username, long:subjectCode)
+##### Path: "/api/teachers/<username>/dissociate/<subjectCode>"
+POST http://localhost:8080/academics/api/teachers/rmartinho/dissociate/9416
+Accept: application/json
+
+##### TeacherService - updateTeacher(String:username, TeacherDTO:teacherDTO)
+##### Path: "/api/teachers/<username>"
+PUT http://localhost:8080/academics/api/teachers/rmartinho
+Content-Type: application/json
+
+{
+  "username": "does not matter to this case",
+  "password": "123",
+  "name": "Ricardo J. Martinho",
+  "email": "martinho.ricardo@gmail.com",
+  "office": "A.S.2.8"
+}
+
+##### TeacherService - deleteTeacher(String:username)
+##### Path: "/api/teachers/<username>"
+DELETE http://localhost:8080/academics/api/teachers/rmartinho
+Content-Type: application/json
+
+
+
+
+##### CourseService - getAllCourses()
+##### Path: "/api/courses"
 GET http://localhost:8080/academics/api/courses
 Accept: application/json
 
-##### Courses - [POST] createNewCourse()
+##### CourseService - getCourseDetails(long:courseCode)
+##### Path: "/api/courses/<courseCode>"
+GET http://localhost:8080/academics/api/courses/9119
+Accept: application/json
+
+##### CourseService - getCourseSubjects(long:courseCode)
+##### Path: "/api/courses/<courseCode>/subjects"
+GET http://localhost:8080/academics/api/courses/9119/subjects
+Accept: application/json
+
+##### CourseService - getCourseStudents(long:courseCode)
+##### Path: "/api/courses/<courseCode>/students"
+GET http://localhost:8080/academics/api/courses/9119/students
+Accept: application/json
+
+##### CourseService - createNewCourse(CourseDTO:courseDTO)
+##### Path: "/api/courses"
 POST http://localhost:8080/academics/api/courses
 Content-Type: application/json
 
@@ -29,3 +157,68 @@ Content-Type: application/json
   "code": 9147,
   "name": "Gestão (D)"
 }
+
+##### CourseService - updateCourse(CourseDTO:courseDTO)
+##### Path: "/api/courses/<courseCode>"
+PUT http://localhost:8080/academics/api/courses/9119
+Content-Type: application/json
+
+{
+  "code": 123,
+  "name": "EI"
+}
+
+##### CourseService - deleteCourse()
+##### Path: "/api/courses/<courseCode>"
+DELETE http://localhost:8080/academics/api/courses/9119
+Content-Type: application/json
+
+
+
+
+
+##### SubjectService - getAllSubjects()
+##### Path: "/api/subjects"
+GET http://localhost:8080/academics/api/subjects
+Accept: application/json
+
+##### SubjectService - createNewSubject(SubjectDTO:subjectDTO)
+##### Path: "/api/subjects"
+POST http://localhost:8080/academics/api/subjects
+Content-Type: application/json
+
+{
+  "code": 1234,
+  "name": "Segurança de Informação",
+  "courseCode": 9119,
+  "courseYear": 2023,
+  "scholarYear": "2023/2024"
+}
+
+##### SubjectService - getSubjectStudents(long:subjectCode)
+##### Path: "/api/subjects/<subjectCode>/students"
+GET http://localhost:8080/academics/api/subjects/2321/students
+Accept: application/json
+
+
+##### SubjectService - getSubjectStudents(long:subjectCode)
+##### Path: "/api/subjects/<subjectCode>/students"
+//!WILL RETURN AN EMPTY ARRAY, THERE ARE NO STUDENTS IN THIS SUBJECT
+GET http://localhost:8080/academics/api/subjects/3734/students
+Accept: application/json
+
+##### SubjectService - getSubjectStudents(long:subjectCode)
+##### Path: "/api/subjects/<subjectCode>/students"
+//!WILL FAIL, THIS SUBJECT DOES NOT EXIST
+GET http://localhost:8080/academics/api/subjects/123/students
+Accept: application/json
+
+##### SubjectService - getSubjectTeachers(long:subjectCode)
+##### Path: "/api/subjects/<subjectCode>/teachers"
+GET http://localhost:8080/academics/api/subjects/2178/teachers
+Accept: application/json
+
+##### SubjectService - deleteSubject()
+##### Path: "/api/subjects/<subjectCode>"
+DELETE http://localhost:8080/academics/api/subjects/2321
+Content-Type: application/json

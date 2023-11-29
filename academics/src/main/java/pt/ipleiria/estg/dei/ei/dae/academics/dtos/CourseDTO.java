@@ -1,8 +1,5 @@
 package pt.ipleiria.estg.dei.ei.dae.academics.dtos;
 
-import jakarta.persistence.Id;
-import jakarta.validation.constraints.NotNull;
-
 public class CourseDTO {
 
     long code;

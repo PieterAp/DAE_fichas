@@ -1,49 +1,42 @@
 package pt.ipleiria.estg.dei.ei.dae.academics.entities;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 
 import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Objects;
 
 @Entity
 @NamedQueries({
         @NamedQuery(
-                name = "getAllStudents",
-                query = "SELECT s " +
-                        "FROM Student s " +
-                        "ORDER BY s.name" // JPQL
+                name = "getAllTeachers",
+                query = "SELECT t " +
+                        "FROM Teacher t " +
+                        "ORDER BY t.name" // JPQL
         )
 })
-public class Student extends User implements Serializable {
+public class Teacher extends User implements Serializable {
+    String office;
 
-    @ManyToOne
-    @JoinColumn(name = "course_code")
-    @NotNull
-    Course course;
-
-    @ManyToMany(mappedBy = "students")
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "teachers")
     List<Subject> subjects;
 
-
-    public Student() {
+    public Teacher() {
         this.subjects = new LinkedList<Subject>();
     }
 
-    public Student(String username, String password, String name, String email, Course course) {
+    public Teacher(String username, String password, String name, String email, String office) {
         super(username, password, name, email);
-        this.course = course;
+        this.office = office;
         this.subjects = new LinkedList<Subject>();
     }
 
-    public Course getCourse() {
-        return course;
+    public String getOffice() {
+        return office;
     }
 
-    public void setCourse(Course course) {
-        this.course = course;
+    public void setOffice(String office) {
+        this.office = office;
     }
 
     public List<Subject> getSubjects() {

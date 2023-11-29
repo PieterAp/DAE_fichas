@@ -18,17 +18,18 @@ public class CorsFilter implements ContainerResponseFilter {
         // Eg: to communicate only with NUXT ("Access-Control-Allow-Origin", "localhost:3000")
         responseContext.getHeaders().add("Access-Control-Allow-Origin", "*");
 
+
         // important to pass in the preflight browser request
         // note: you enabled this option in the nuxt.config.js (NUXT Web App)
         // axios: {
-        //  proxy: true, # tells axios to use a proxy
-        //  credentials: true # CORS
+        //     proxy: true, # tells axios to use a proxy
+        //     credentials: true # COR
         // },
         responseContext.getHeaders().add("Access-Control-Allow-Credentials", "true");
 
         // defines what headers you authorize that can be present in a request
-        // responseContext.getHeaders().add("Access-Control-Allow-Headers","origin, content-type, accept, authorization");
+        responseContext.getHeaders().add("Access-Control-Allow-Headers","origin, content-type, accept, authorization");
         // defines the verbs you authorize
-        responseContext.getHeaders().add("Access-Control-Allow-Headers","*");
+        responseContext.getHeaders().add("Access-Control-Allow-Methods","GET, POST, PUT, DELETE, OPTIONS, HEAD");
     }
 }
