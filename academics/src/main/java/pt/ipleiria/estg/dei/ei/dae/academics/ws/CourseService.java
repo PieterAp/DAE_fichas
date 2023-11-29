@@ -4,18 +4,15 @@ import jakarta.ejb.EJB;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-import org.hibernate.Hibernate;
 import pt.ipleiria.estg.dei.ei.dae.academics.dtos.CourseDTO;
-import pt.ipleiria.estg.dei.ei.dae.academics.dtos.StudentDTO;
-import pt.ipleiria.estg.dei.ei.dae.academics.dtos.SubjectDTO;
 import pt.ipleiria.estg.dei.ei.dae.academics.ejbs.CourseBean;
 import pt.ipleiria.estg.dei.ei.dae.academics.entities.Course;
 import pt.ipleiria.estg.dei.ei.dae.academics.entities.Student;
 import pt.ipleiria.estg.dei.ei.dae.academics.entities.Subject;
+import pt.ipleiria.estg.dei.ei.dae.academics.exceptions.MyEntityExistsException;
 import pt.ipleiria.estg.dei.ei.dae.academics.utils.DTOconverter;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Path("courses") // relative url web path for this service
 @Produces({MediaType.APPLICATION_JSON}) // injects header “Content-Type: application/json”
@@ -36,13 +33,7 @@ public class CourseService {
     @Path("{courseCode}")
     public Response getCourseDetails(@PathParam("courseCode") long courseCode) {
         Course course = courseBean.find(courseCode);
-
-        if (course != null) {
-            return Response.ok(DTOconverter.toDTO(course)).build();
-        }
-        return Response.status(Response.Status.NOT_FOUND)
-                .entity("ERROR_FINDING_COURSE")
-                .build();
+        return Response.ok(DTOconverter.toDTO(course)).build();
     }
 
     //get subjects in course
@@ -76,7 +67,7 @@ public class CourseService {
 
     @POST
     @Path("/")
-    public Response createNewCourse (CourseDTO courseDTO) {
+    public Response createNewCourse (CourseDTO courseDTO) throws MyEntityExistsException {
         courseBean.create(
                 courseDTO.getCode(),
                 courseDTO.getName()

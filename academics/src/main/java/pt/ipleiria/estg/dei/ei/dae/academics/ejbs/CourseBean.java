@@ -3,11 +3,12 @@ package pt.ipleiria.estg.dei.ei.dae.academics.ejbs;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.Query;
 import org.hibernate.Hibernate;
 import pt.ipleiria.estg.dei.ei.dae.academics.entities.Course;
 import pt.ipleiria.estg.dei.ei.dae.academics.entities.Student;
 import pt.ipleiria.estg.dei.ei.dae.academics.entities.Subject;
-import pt.ipleiria.estg.dei.ei.dae.academics.entities.Teacher;
+import pt.ipleiria.estg.dei.ei.dae.academics.exceptions.MyEntityExistsException;
 
 import java.util.List;
 
@@ -17,7 +18,20 @@ public class CourseBean {
     @PersistenceContext
     private EntityManager entityManager;
 
-    public void create(long code, String name) {
+    public boolean exists(long code) {
+        Query query = entityManager.createQuery(
+                "SELECT COUNT(c.code) FROM Course c WHERE c.code = :code",
+                Long.class
+        );
+        query.setParameter("code", code);
+        return (Long)query.getSingleResult() > 0L;
+    }
+
+    public void create(long code, String name) throws MyEntityExistsException {
+        if (exists(code)) {
+            throw new MyEntityExistsException("Course with code '" + code + "' already exists");
+        }
+
         var course = new Course(code, name);
         entityManager.persist(course);
     }
@@ -51,10 +65,8 @@ public class CourseBean {
 
         //todo: take care of this conflict later on
 
-        if (entityManager.find(Course.class, courseCode) == null) {
-            return true; //was deleted
-        }
-        return false; //was not deleted
+        return entityManager.find(Course.class, courseCode) == null; //was deleted
+//was not deleted
     }
 
     public void updateCourse (long courseCodeID, String name) {

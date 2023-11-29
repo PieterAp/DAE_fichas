@@ -1,5 +1,8 @@
 package pt.ipleiria.estg.dei.ei.dae.academics.dtos;
 
+import java.util.LinkedList;
+import java.util.List;
+
 public class StudentDTO {
     String username;
     String password;
@@ -8,8 +11,10 @@ public class StudentDTO {
     long courseCode;
     String courseName;
 
-    public StudentDTO() {
+    List<SubjectDTO> subjects;
 
+    public StudentDTO() {
+        this.subjects = new LinkedList<SubjectDTO>();
     }
 
     public StudentDTO(String username, String password, String name, String email, long courseCode, String courseName) {
@@ -19,6 +24,7 @@ public class StudentDTO {
         this.email = email;
         this.courseCode = courseCode;
         this.courseName = courseName;
+        this.subjects = new LinkedList<SubjectDTO>();
     }
 
     public String getUsername() {
@@ -67,5 +73,13 @@ public class StudentDTO {
 
     public void setCourseName(String courseName) {
         this.courseName = courseName;
+    }
+
+    public List<SubjectDTO> getSubjects() {
+        return subjects;
+    }
+
+    public void setSubjects(List<SubjectDTO> subjects) {
+        this.subjects = subjects;
     }
 }

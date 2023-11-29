@@ -19,6 +19,9 @@ public class User {
     @NotNull
     private String email;
 
+    @Version
+    private int version;
+
     public User() {
 
     }
