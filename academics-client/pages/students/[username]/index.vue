@@ -1,7 +1,8 @@
 <template>
-    <nuxt-link to="/students">Back</nuxt-link> | <nuxt-link to="/">Home</nuxt-link> | <nuxt-link to="/students/create">Create a New Student</nuxt-link>
+    <nuxt-link to="/students">Back</nuxt-link> | <nuxt-link to="/">Home</nuxt-link>
     <div v-if="student">
-        <h2>Details of {{ username }}</h2>
+        
+        <h2>Details of {{ username }} (<nuxt-link :to="`/students/${student.username}/edit`">Update</nuxt-link> | <a href="" @click.prevent="deleteStudent"> Delete</a>) </h2> 
         <div style="padding-left: 14px;">
             <p><b>Username:</b> {{ student.username }}</p>
             <p><b>Name:</b> {{ student.name }}</p>
@@ -68,34 +69,66 @@
             method: 'POST',
             headers: { "Content-Type": "application/json" },
         }
-        const { error } = await useFetch(`${api}/students/${this.student.username}/unroll/${subjectCode}`, requestOptions)
+        const { error } = await useFetch(`${api}/students/${username}/unroll/${subjectCode}`, requestOptions)
         
         if (!error.value) {
             const index = this.subjects.findIndex(x => x.code === subjectCode);
+            const tempSubject = this.subjects[index];
+            this.availableToEnroll.push({code: tempSubject.code,
+                                         courseCode: tempSubject.courseCode,
+                                         courseName: tempSubject.courseName,
+                                         courseYear: tempSubject.courseYear,
+                                         name: tempSubject.name,
+                                         scholarYear: tempSubject.scholarYear})
             this.subjects.splice(index,1);
         }else{
+            alert("An error occurred while processing your request.");
+            messages.value.push(error.value);
             console.log(error.value);
         }
-    }
+    };
 
     async function enroll(subjectCode) {
         const requestOptions = {
             method: 'POST',
             headers: { "Content-Type": "application/json" },
         }
-        const { error } = await useFetch(`${api}/students/${this.student.username}/enroll/${this.selectedSubjectCode}`, requestOptions)
+        const { error } = await useFetch(`${api}/students/${username}/enroll/${this.selectedSubjectCode}`, requestOptions)
         
         if (!error.value) {
-            const { data: tempSubjects, error: subjectsErr } = await
-            useFetch(`${api}/students/${username}/subjects`)
+            // add to the list of enrolled subjects
+            const indexDropDown = this.availableToEnroll.findIndex(x => x.code === subjectCode);
 
-            console.log("here is some special candy");
-            console.log(this.subjects);
-            console.log("some moooore");
-            console.log(tempSubjects.value);
-            this.subjects = tempSubjects.value;
+            const tempSubject = this.availableToEnroll[indexDropDown];
+            this.subjects.push({code: tempSubject.code,
+                                courseCode: tempSubject.courseCode,
+                                courseName: tempSubject.courseName,
+                                courseYear: tempSubject.courseYear,
+                                name: tempSubject.name,
+                                scholarYear: tempSubject.scholarYear})
+
+            this.availableToEnroll.splice(indexDropDown,1);
         }else{
+            alert("An error occurred while processing your request.");
+            messages.value.push(error.value);
+            console.log(error.value);
+        }
+    };
+    
+    async function deleteStudent() {
+        const requestOptions = {
+            method: 'DELETE',
+            headers: { "Content-Type": "application/json" },
+        }
+        const { error } = await useFetch(`${api}/students/${username}`, requestOptions)
+        
+        if (!error.value) {
+            navigateTo('/students');
+        }else{
+            alert("An error occurred while processing your request.");
+            messages.value.push(error.value);
             console.log(error.value);
         }
     }
+
 </script>
