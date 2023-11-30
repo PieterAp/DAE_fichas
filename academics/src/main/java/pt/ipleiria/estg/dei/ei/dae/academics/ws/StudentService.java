@@ -1,12 +1,15 @@
 package pt.ipleiria.estg.dei.ei.dae.academics.ws;
 
 import jakarta.ejb.EJB;
+import jakarta.mail.MessagingException;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import pt.ipleiria.estg.dei.ei.dae.academics.dtos.CourseDTO;
+import pt.ipleiria.estg.dei.ei.dae.academics.dtos.EmailDTO;
 import pt.ipleiria.estg.dei.ei.dae.academics.dtos.StudentDTO;
 import pt.ipleiria.estg.dei.ei.dae.academics.dtos.SubjectDTO;
+import pt.ipleiria.estg.dei.ei.dae.academics.ejbs.EmailBean;
 import pt.ipleiria.estg.dei.ei.dae.academics.ejbs.StudentBean;
 import pt.ipleiria.estg.dei.ei.dae.academics.entities.Student;
 import pt.ipleiria.estg.dei.ei.dae.academics.entities.Subject;
@@ -24,6 +27,9 @@ import java.util.stream.Collectors;
 public class StudentService {
     @EJB
     private StudentBean studentBean;
+
+    @EJB
+    private EmailBean emailBean;
 
     //region GET
     @GET // means: to call this endpoint, we need to use the HTTP GET method
@@ -68,6 +74,17 @@ public class StudentService {
     //endregion
 
     //region POST
+    @POST
+    @Path("/{username}/email/send")
+    public Response sendEmail(@PathParam("username") String username, EmailDTO email) throws MyEntityNotFoundException, MessagingException {
+        Student student = studentBean.find(username);
+        if (student == null) {
+            throw new MyEntityNotFoundException("Student with username '" + username + "' not found in our records.");
+        }
+        emailBean.send(student.getEmail(), email.getSubject(), email.getMessage());
+        return Response.status(Response.Status.OK).entity("E-mail sent").build();
+    }
+
     @POST
     @Path("/")
     public Response createNewStudent (StudentDTO studentDTO) throws MyEntityNotFoundException, MyEntityExistsException, MyConstraintViolationException {
