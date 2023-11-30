@@ -221,3 +221,14 @@ Accept: application/json
 ##### Path: "/api/subjects/<subjectCode>"
 DELETE http://localhost:8080/academics/api/subjects/2321
 Content-Type: application/json
+
+
+##### StudentService - sendEmail(SubjectDTO:subjectDTO)
+##### Path: "/api/{username}/email/send"
+POST http://localhost:8080/academics/api/students/piet/email/send
+Content-Type: application/json
+
+{
+  "subject": "Go get some bread",
+  "message": "Dear Mike, please go out to the baker to get some fresh warm bread"
+}
