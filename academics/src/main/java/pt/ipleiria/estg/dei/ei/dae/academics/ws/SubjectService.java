@@ -72,7 +72,6 @@ public class SubjectService {
         if(newSubject == null)
             return Response.status(Response.Status.BAD_REQUEST).build();
         return Response.status(Response.Status.CREATED).entity(DTOconverter.toDTO(newSubject)).build();
-        //return Response.status(Response.Status.CREATED).entity(toDTO(newSubject)).build();
     }
 
     @PUT

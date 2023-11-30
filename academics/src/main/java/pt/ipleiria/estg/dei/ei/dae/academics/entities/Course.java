@@ -32,8 +32,11 @@ public class Course {
     List<Student> students;
 
     // orphanRemoval = true
-        @OneToMany(mappedBy = "course", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "course", cascade = CascadeType.REMOVE)
     List<Subject> subjects;
+
+    @Version
+    private int version;
 
     public Course() {
         this.students = new LinkedList<Student>();

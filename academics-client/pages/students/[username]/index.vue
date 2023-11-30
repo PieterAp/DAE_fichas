@@ -9,15 +9,15 @@
             <p><b>E-mail:</b> {{ student.email }}</p>
         </div>
     </div>
-    <div v-if="subjects">
+    <div v-if="student">
         <h2>Enrolled in course:</h2>
         <div style="padding-left: 14px;">
             {{ student.courseName }} ({{ student.courseCode }})
         </div>
     </div>
-    <div v-if="subjects">
+    <div v-if="student.subjects">
         <h2>Enrolled in subjects:</h2>
-        <div v-for="subject in subjects" style="display:inline-block; float: left;">
+        <div v-for="subject in student.subjects" style="display:inline-block; float: left;">
             <div style="margin: 7px; padding: 0px; border-color: black; border: 1px solid;">
                 <div style="padding-left: 14px; padding-right: 14px;">
                     <p><b>Code:</b> {{ subject.code }}</p>
@@ -54,14 +54,12 @@
     const api = config.public.API_URL
     const { data: student, error: studentErr } = await
     useFetch(`${api}/students/${username}`)
-    const { data: subjects, error: subjectsErr } = await
-    useFetch(`${api}/students/${username}/subjects`)
+
     const { data: availableToEnroll, error: availableToEnrollERR } = await
     useFetch(`${api}/students/${username}/subjectsAvailable`)
     
     const messages = ref([])
     if (studentErr.value) messages.value.push(studentErr.value)
-    if (subjectsErr.value) messages.value.push(subjectsErr.value)
     if (availableToEnroll.value) messages.value.push(availableToEnrollERR.value)
 
     async function unroll(subjectCode) {
@@ -72,15 +70,15 @@
         const { error } = await useFetch(`${api}/students/${username}/unroll/${subjectCode}`, requestOptions)
         
         if (!error.value) {
-            const index = this.subjects.findIndex(x => x.code === subjectCode);
-            const tempSubject = this.subjects[index];
+            const index = this.student.subjects.findIndex(x => x.code === subjectCode);
+            const tempSubject = this.student.subjects[index];
             this.availableToEnroll.push({code: tempSubject.code,
                                          courseCode: tempSubject.courseCode,
                                          courseName: tempSubject.courseName,
                                          courseYear: tempSubject.courseYear,
                                          name: tempSubject.name,
                                          scholarYear: tempSubject.scholarYear})
-            this.subjects.splice(index,1);
+            this.student.subjects.splice(index,1);
         }else{
             alert("An error occurred while processing your request.");
             messages.value.push(error.value);
@@ -100,7 +98,7 @@
             const indexDropDown = this.availableToEnroll.findIndex(x => x.code === subjectCode);
 
             const tempSubject = this.availableToEnroll[indexDropDown];
-            this.subjects.push({code: tempSubject.code,
+            this.student.subjects.push({code: tempSubject.code,
                                 courseCode: tempSubject.courseCode,
                                 courseName: tempSubject.courseName,
                                 courseYear: tempSubject.courseYear,

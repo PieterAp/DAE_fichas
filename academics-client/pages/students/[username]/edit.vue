@@ -13,7 +13,7 @@
             <input v-model="studentForm.email" type="text">
         </div>
         <div>Course:
-            <select disabled="true" v-model="studentForm.courseCode">
+            <select v-model="studentForm.courseCode">
                 <option v-for="course in courses" :value="course.code">
                     {{ course.name }}
                 </option>

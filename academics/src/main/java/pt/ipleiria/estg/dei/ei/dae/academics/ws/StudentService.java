@@ -10,6 +10,9 @@ import pt.ipleiria.estg.dei.ei.dae.academics.dtos.SubjectDTO;
 import pt.ipleiria.estg.dei.ei.dae.academics.ejbs.StudentBean;
 import pt.ipleiria.estg.dei.ei.dae.academics.entities.Student;
 import pt.ipleiria.estg.dei.ei.dae.academics.entities.Subject;
+import pt.ipleiria.estg.dei.ei.dae.academics.exceptions.MyConstraintViolationException;
+import pt.ipleiria.estg.dei.ei.dae.academics.exceptions.MyEntityExistsException;
+import pt.ipleiria.estg.dei.ei.dae.academics.exceptions.MyEntityNotFoundException;
 import pt.ipleiria.estg.dei.ei.dae.academics.utils.DTOconverter;
 
 import java.util.List;
@@ -26,19 +29,14 @@ public class StudentService {
     @GET // means: to call this endpoint, we need to use the HTTP GET method
     @Path("/") // means: the relative url path is “/api/students/”
     public List<StudentDTO> getAllStudents() {
-        return DTOconverter.studentsToDTOs(studentBean.getAll());
+        return DTOconverter.studentsToDTOsNoSubjects(studentBean.getAll());
     }
 
     @GET
     @Path("{username}")
-    public Response getStudentDetails(@PathParam("username") String username) {
-        Student student = studentBean.find(username);
-        if (student != null) {
-            return Response.ok(DTOconverter.toDTO(student)).build();
-        }
-        return Response.status(Response.Status.NOT_FOUND)
-                .entity("ERROR_FINDING_STUDENT")
-                .build();
+    public Response getStudentDetails(@PathParam("username") String username) throws MyEntityNotFoundException {
+        Student student = studentBean.findWithSubjects(username);
+        return Response.ok(DTOconverter.toDTO(student)).build();
     }
 
     @GET
@@ -72,7 +70,7 @@ public class StudentService {
     //region POST
     @POST
     @Path("/")
-    public Response createNewStudent (StudentDTO studentDTO){
+    public Response createNewStudent (StudentDTO studentDTO) throws MyEntityNotFoundException, MyEntityExistsException, MyConstraintViolationException {
         studentBean.create(
                 studentDTO.getUsername(),
                 studentDTO.getPassword(),
@@ -82,9 +80,6 @@ public class StudentService {
         );
 
         Student newStudent = studentBean.find(studentDTO.getUsername());
-
-        if(newStudent == null)
-            return Response.status(Response.Status.BAD_REQUEST).build();
         return Response.status(Response.Status.CREATED).entity(DTOconverter.toDTO(newStudent)).build();
     }
 
@@ -116,7 +111,7 @@ public class StudentService {
     @PUT
     @Path("{username}")
     public Response updateStudent(@PathParam("username") String username, StudentDTO studentDTO) {
-        studentBean.updateStudent(username, studentDTO.getEmail(), studentDTO.getName(), studentDTO.getPassword());
+        studentBean.updateStudent(username, studentDTO.getEmail(), studentDTO.getName(), studentDTO.getPassword(), studentDTO.getCourseCode());
         return Response.status(Response.Status.OK).build();
     }
 

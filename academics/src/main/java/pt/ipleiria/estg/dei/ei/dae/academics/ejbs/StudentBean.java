@@ -2,11 +2,17 @@ package pt.ipleiria.estg.dei.ei.dae.academics.ejbs;
 
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.LockModeType;
 import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.Query;
+import jakarta.validation.ConstraintViolationException;
 import org.hibernate.Hibernate;
 import pt.ipleiria.estg.dei.ei.dae.academics.entities.Course;
 import pt.ipleiria.estg.dei.ei.dae.academics.entities.Student;
 import pt.ipleiria.estg.dei.ei.dae.academics.entities.Subject;
+import pt.ipleiria.estg.dei.ei.dae.academics.exceptions.MyConstraintViolationException;
+import pt.ipleiria.estg.dei.ei.dae.academics.exceptions.MyEntityExistsException;
+import pt.ipleiria.estg.dei.ei.dae.academics.exceptions.MyEntityNotFoundException;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -18,18 +24,48 @@ public class StudentBean {
     @PersistenceContext
     private EntityManager entityManager;
 
-    public void create(String username, String password, String name, String email, long courseCode) {
-        Course foundCourse = entityManager.find(Course.class, courseCode);
+    public boolean exists(String username) {
+        Query query = entityManager.createQuery(
+                "SELECT COUNT(s.username) FROM Student s WHERE s.username = :username",
+                Long.class
+        );
+        query.setParameter("username", username);
+        return (Long)query.getSingleResult() > 0L;
+    }
 
-        if (foundCourse != null) {
-            var student = new Student(username, password, name, email, foundCourse);
+    public void create(String username, String password, String name, String email, long courseCode) throws MyEntityExistsException, MyEntityNotFoundException, MyConstraintViolationException {
+        if (exists(username)) {
+            throw new MyEntityExistsException("Student with username '" + username + "' already exists");
+        }
+
+        Course foundCourse = entityManager.find(Course.class, courseCode);
+        if (foundCourse == null) {
+            throw new MyEntityNotFoundException("Course with code '" + courseCode + "' not found");
+        }
+
+        try {
+            Student student = new Student(username, password, name, email, foundCourse);
             foundCourse.addStudent(student);
             entityManager.persist(student);
+            entityManager.flush(); // when using Hibernate, to force it to throw a
+            // ContraintViolationException, as in the JPA specification
+        } catch (ConstraintViolationException e) {
+            throw new MyConstraintViolationException(e);
         }
     }
 
     public Student find(String username) {
         return entityManager.find(Student.class, username);
+    }
+
+    public Student findWithSubjects(String username) throws MyEntityNotFoundException {
+        Student student = entityManager.find(Student.class, username);
+        if (student == null) {
+            throw new MyEntityNotFoundException("Student with username '" + username + "' not found");
+        }
+
+        Hibernate.initialize(student.getSubjects());
+        return student;
     }
 
     public Student findStudentWithSubjects(String username) {
@@ -100,11 +136,40 @@ public class StudentBean {
         return false;
     }
 
-    public void updateStudent(String username, String email, String name, String password) {
+    public void updateStudent(String username, String email, String name, String password, long courseCode) {
         Student student = entityManager.find(Student.class, username);
+
+        if (student == null) {
+            System.err.println("ERROR_STUDENT_NOT_FOUND: " + username);
+            return;
+        }
+
+        entityManager.lock(student, LockModeType.OPTIMISTIC);
         student.setEmail(email);
         student.setName(name);
-        student.setPassword(password);
+        if (password!=null) {
+            student.setPassword(password);
+        }
+
+        //update student course
+        if (student.getCourse().getCode() != courseCode) {
+            Course course = entityManager.find(Course.class, courseCode);
+            if (course == null) {
+                System.err.println("ERROR_COURSE_NOT_FOUND: " + courseCode);
+                return;
+            }
+
+            //unroll student from subjects from previous course
+            Hibernate.initialize(student.getSubjects());
+            List<Subject> subjects = new LinkedList<Subject>(student.getSubjects());
+
+            for (Subject subject : subjects) {
+                unrollStudentFromSubject(student.getUsername(), subject.getCode());
+            }
+
+            student.setCourse(course);
+        }
+
         entityManager.merge(student);
     }
 

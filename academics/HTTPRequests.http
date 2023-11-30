@@ -54,11 +54,10 @@ PUT http://localhost:8080/academics/api/students/gzTag
 Content-Type: application/json
 
 {
-  "username": "doesNotChange",
   "password": "tiagoagaweh",
   "name": "das habben ich nich verstanden",
   "email": "tiagoagaweh@gmail.com",
-  "courseCode": 561456456465
+  "courseCode": 9123
 }
 
 ##### StudentService - deleteStudent(String:username)

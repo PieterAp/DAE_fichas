@@ -17,7 +17,8 @@ public final class DTOconverter {
     // (...)ToDTOs -> converts an entire list of entities into a list of DTOs
 
     //region StudentDTO
-    public static StudentDTO toDTO(Student student) {
+    //region without subjects
+    public static StudentDTO toDTONoSubjects(Student student) {
         return new StudentDTO(
                 student.getUsername(),
                 student.getPassword(),
@@ -28,9 +29,30 @@ public final class DTOconverter {
         );
     }
 
+    public static List<StudentDTO> studentsToDTOsNoSubjects(List<Student> students) {
+        return students.stream().map(DTOconverter::toDTONoSubjects).collect(Collectors.toList());
+    }
+    //endregion
+
+    //region with subjects
+    public static StudentDTO toDTO(Student student) {
+        StudentDTO studentDTO = new StudentDTO(
+                student.getUsername(),
+                student.getPassword(),
+                student.getName(),
+                student.getEmail(),
+                student.getCourse().getCode(),
+                student.getCourse().getName()
+        );
+        studentDTO.setSubjects(subjectsToDTOs(student.getSubjects()));
+
+        return studentDTO;
+    }
+
     public static List<StudentDTO> studentsToDTOs(List<Student> students) {
         return students.stream().map(DTOconverter::toDTO).collect(Collectors.toList());
     }
+    //endregion
     //endregion
 
     //region SubjectDTO

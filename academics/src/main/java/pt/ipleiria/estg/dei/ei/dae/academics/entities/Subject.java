@@ -68,6 +68,9 @@ public class Subject implements Serializable {
     )
     List<Teacher> teachers;
 
+    @Version
+    private int version;
+
     public Subject() {
         this.students = new LinkedList<Student>();
         this.teachers = new LinkedList<Teacher>();
