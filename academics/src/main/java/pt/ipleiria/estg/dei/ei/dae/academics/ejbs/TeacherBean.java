@@ -1,11 +1,13 @@
 package pt.ipleiria.estg.dei.ei.dae.academics.ejbs;
 
 import jakarta.ejb.Stateless;
+import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.hibernate.Hibernate;
 import pt.ipleiria.estg.dei.ei.dae.academics.entities.Subject;
 import pt.ipleiria.estg.dei.ei.dae.academics.entities.Teacher;
+import pt.ipleiria.estg.dei.ei.dae.academics.security.Hasher;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -16,8 +18,11 @@ public class TeacherBean {
     @PersistenceContext
     private EntityManager entityManager;
 
+    @Inject
+    private Hasher hasher;
+
     public void create(String username, String password, String name, String email, String office) {
-        Teacher teacher = new Teacher(username, password, name, email, office);
+        Teacher teacher = new Teacher(username, hasher.hash(password), name, email, office);
         entityManager.persist(teacher);
     }
 

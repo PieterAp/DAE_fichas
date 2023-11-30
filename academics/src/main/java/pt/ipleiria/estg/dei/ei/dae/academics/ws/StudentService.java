@@ -1,5 +1,6 @@
 package pt.ipleiria.estg.dei.ei.dae.academics.ws;
 
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.ejb.EJB;
 import jakarta.mail.MessagingException;
 import jakarta.ws.rs.*;
@@ -16,6 +17,7 @@ import pt.ipleiria.estg.dei.ei.dae.academics.entities.Subject;
 import pt.ipleiria.estg.dei.ei.dae.academics.exceptions.MyConstraintViolationException;
 import pt.ipleiria.estg.dei.ei.dae.academics.exceptions.MyEntityExistsException;
 import pt.ipleiria.estg.dei.ei.dae.academics.exceptions.MyEntityNotFoundException;
+import pt.ipleiria.estg.dei.ei.dae.academics.security.Authenticated;
 import pt.ipleiria.estg.dei.ei.dae.academics.utils.DTOconverter;
 
 import java.util.List;
@@ -24,6 +26,8 @@ import java.util.stream.Collectors;
 @Path("students") // relative url web path for this service
 @Produces({MediaType.APPLICATION_JSON}) // injects header “Content-Type: application/json”
 @Consumes({MediaType.APPLICATION_JSON}) // injects header “Accept: application/json”
+@Authenticated
+@RolesAllowed({"Teacher", "Administrator", "Student"})
 public class StudentService {
     @EJB
     private StudentBean studentBean;
