@@ -6,6 +6,6 @@ Progresso:
 - [x]  Ficha 3
 - [x]  Ficha 4
 - [x]  Ficha 5
-- [ ]  Ficha 6
+- [x]  Ficha 6
 - [ ]  Ficha 7
 - [ ]  Ficha 8
