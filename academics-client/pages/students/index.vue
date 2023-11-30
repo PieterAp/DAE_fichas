@@ -16,7 +16,12 @@
                 <td>{{ student.name }}</td>
                 <td>{{ student.email }}</td>
                 <td>{{ student.courseName }}</td>
-                <nuxt-link :to="`/students/${student.username}`">Details</nuxt-link>
+                <nuxt-link :to="`/students/${student.username}`">
+                    <button>Details</button>
+                </nuxt-link>
+                <nuxt-link :to="`/students/${student.username}/send-email`">
+                    <button>Send Email</button>
+                </nuxt-link>
             </tr>
         </table>
     </div>
