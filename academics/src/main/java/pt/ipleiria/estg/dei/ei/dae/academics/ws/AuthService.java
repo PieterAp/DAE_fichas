@@ -10,6 +10,7 @@ import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.SecurityContext;
 import pt.ipleiria.estg.dei.ei.dae.academics.dtos.AuthDTO;
 import pt.ipleiria.estg.dei.ei.dae.academics.dtos.AuthDTOpasswordSet;
+import pt.ipleiria.estg.dei.ei.dae.academics.dtos.UserDTO;
 import pt.ipleiria.estg.dei.ei.dae.academics.ejbs.UserBean;
 import pt.ipleiria.estg.dei.ei.dae.academics.entities.User;
 import pt.ipleiria.estg.dei.ei.dae.academics.security.Authenticated;
@@ -33,6 +34,15 @@ public class AuthService {
     protected static final String ALGORITHM = "HMACSHA384";
 
     public static final long EXPIRY_MINS = 60L;
+
+    @GET
+    @Authenticated
+    @Path("/user")
+    public Response getAuthenticatedUser() {
+        var username = securityContext.getUserPrincipal().getName();
+        var user = userBean.findOrFail(username);
+        return Response.ok(UserDTO.from(user)).build();
+    }
 
     @POST
     @Path("/login")

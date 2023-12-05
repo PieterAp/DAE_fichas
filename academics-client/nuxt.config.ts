@@ -5,5 +5,8 @@ export default defineNuxtConfig({
     public: {
       API_URL: process.env.API_URL || 'http://localhost:8080/academics/api',
     }
-  }
+  },
+  modules: [
+    '@pinia/nuxt'
+  ]
 })
