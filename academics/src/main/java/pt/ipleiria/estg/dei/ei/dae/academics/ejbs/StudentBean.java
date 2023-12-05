@@ -1,6 +1,7 @@
 package pt.ipleiria.estg.dei.ei.dae.academics.ejbs;
 
 import jakarta.ejb.Stateless;
+import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.LockModeType;
 import jakarta.persistence.PersistenceContext;
@@ -13,6 +14,7 @@ import pt.ipleiria.estg.dei.ei.dae.academics.entities.Subject;
 import pt.ipleiria.estg.dei.ei.dae.academics.exceptions.MyConstraintViolationException;
 import pt.ipleiria.estg.dei.ei.dae.academics.exceptions.MyEntityExistsException;
 import pt.ipleiria.estg.dei.ei.dae.academics.exceptions.MyEntityNotFoundException;
+import pt.ipleiria.estg.dei.ei.dae.academics.security.Hasher;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -23,6 +25,9 @@ public class StudentBean {
 
     @PersistenceContext
     private EntityManager entityManager;
+
+    @Inject
+    private Hasher hasher;
 
     public boolean exists(String username) {
         Query query = entityManager.createQuery(
@@ -44,7 +49,7 @@ public class StudentBean {
         }
 
         try {
-            Student student = new Student(username, password, name, email, foundCourse);
+            Student student = new Student(username, hasher.hash(password), name, email, foundCourse);
             foundCourse.addStudent(student);
             entityManager.persist(student);
             entityManager.flush(); // when using Hibernate, to force it to throw a
@@ -148,7 +153,7 @@ public class StudentBean {
         student.setEmail(email);
         student.setName(name);
         if (password!=null) {
-            student.setPassword(password);
+            student.setPassword(hasher.hash(password));
         }
 
         //update student course

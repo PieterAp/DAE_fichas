@@ -1,5 +1,6 @@
 package pt.ipleiria.estg.dei.ei.dae.academics.ws;
 
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.ejb.EJB;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
@@ -10,6 +11,7 @@ import pt.ipleiria.estg.dei.ei.dae.academics.entities.Course;
 import pt.ipleiria.estg.dei.ei.dae.academics.entities.Student;
 import pt.ipleiria.estg.dei.ei.dae.academics.entities.Subject;
 import pt.ipleiria.estg.dei.ei.dae.academics.exceptions.MyEntityExistsException;
+import pt.ipleiria.estg.dei.ei.dae.academics.security.Authenticated;
 import pt.ipleiria.estg.dei.ei.dae.academics.utils.DTOconverter;
 
 import java.util.List;
@@ -67,6 +69,8 @@ public class CourseService {
 
     @POST
     @Path("/")
+    @Authenticated
+    @RolesAllowed({"Administrator"})
     public Response createNewCourse (CourseDTO courseDTO) throws MyEntityExistsException {
         courseBean.create(
                 courseDTO.getCode(),

@@ -1,3 +1,39 @@
+##### xpto
+##### Path: "/api/students"
+POST http://localhost:8080/academics/api/auth/login
+Content-Type: application/json
+
+{
+  "username": "piet",
+  "password": "l2t3a4g"
+}
+
+##### StudentService - getAllStudents()
+##### Path: "/api/students"
+GET http://localhost:8080/academics/api/students
+Accept: application/json
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJwaWV0IiwiaWF0IjoxNzAxNzM0OTM4LCJleHAiOjE3MDE3Mzg1Mzh9.ZKtbQfoEWZpXpp_m2Sq9nIvEq4EresJ4Q7W-ihfpOeOjEFFS4nTqKqS1jcyEN7M1
+
+##### StudentService - getAllStudents()
+##### Path: "/api/students"
+GET http://localhost:8080/academics/api/students/asdasda
+Accept: application/json
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJwaWV0IiwiaWF0IjoxNzAxNzM0OTM4LCJleHAiOjE3MDE3Mzg1Mzh9.ZKtbQfoEWZpXpp_m2Sq9nIvEq4EresJ4Q7W-ihfpOeOjEFFS4nTqKqS1jcyEN7M1
+
+##### xpto
+##### Path: "/api/students"
+PATCH http://localhost:8080/academics/api/auth/set-password
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJwaWV0IiwiaWF0IjoxNzAxMjg3OTgwLCJleHAiOjE3MDEyOTE1ODB9.fhut6GRf_IO2uRV4mt9oXheFuqPVFWlA3E74-IJRjRoYENTjew7nK4ogJzCvTIzb
+
+{
+  "oldPassword": "l2t3a4g",
+  "newPassword": "yoMomma16544616",
+  "confirmPassword": "yoMomma16544616"
+}
+
+
+
 ##### StudentService - getAllStudents()
 ##### Path: "/api/students"
 GET http://localhost:8080/academics/api/students
@@ -176,11 +212,6 @@ Content-Type: application/json
 
 
 
-##### SubjectService - getAllSubjects()
-##### Path: "/api/subjects"
-GET http://localhost:8080/academics/api/subjects
-Accept: application/json
-
 ##### SubjectService - createNewSubject(SubjectDTO:subjectDTO)
 ##### Path: "/api/subjects"
 POST http://localhost:8080/academics/api/subjects
@@ -223,7 +254,9 @@ DELETE http://localhost:8080/academics/api/subjects/2321
 Content-Type: application/json
 
 
-##### StudentService - sendEmail(SubjectDTO:subjectDTO)
+
+
+##### StudentService - sendEmail
 ##### Path: "/api/{username}/email/send"
 POST http://localhost:8080/academics/api/students/piet/email/send
 Content-Type: application/json
