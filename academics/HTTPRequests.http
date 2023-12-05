@@ -32,6 +32,12 @@ Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJwaWV0IiwiaWF0IjoxNzAxMjg3O
   "confirmPassword": "yoMomma16544616"
 }
 
+##### xpto
+##### Path: "/api/auth/user"
+GET http://localhost:8080/academics/api/auth/user
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJwaWV0IiwiaWF0IjoxNzAxNzM5MjMxLCJleHAiOjE3MDE3NDI4MzF9.M1HvJGZauOqY8YhOjzwyDWGLjWo5XU2jF1L5c02bnEebFYI3OlCdNU-FWf9Zvs6q
+
 
 
 ##### StudentService - getAllStudents()
