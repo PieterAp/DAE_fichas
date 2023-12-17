@@ -217,6 +217,10 @@ Content-Type: application/json
 
 
 
+##### SubjectService - getAllSubjects()
+##### Path: "/api/subjects/"
+GET http://localhost:8080/academics/api/subjects/
+Accept: application/json
 
 ##### SubjectService - createNewSubject(SubjectDTO:subjectDTO)
 ##### Path: "/api/subjects"
@@ -256,7 +260,7 @@ Accept: application/json
 
 ##### SubjectService - deleteSubject()
 ##### Path: "/api/subjects/<subjectCode>"
-DELETE http://localhost:8080/academics/api/subjects/2321
+DELETE http://localhost:8080/academics/api/subjects/3640
 Content-Type: application/json
 
 

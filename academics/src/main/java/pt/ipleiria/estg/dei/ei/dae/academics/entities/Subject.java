@@ -2,8 +2,11 @@ package pt.ipleiria.estg.dei.ei.dae.academics.entities;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
@@ -21,6 +24,8 @@ import java.util.Objects;
                         "ORDER BY course.name ASC, scholarYear DESC, courseYear ASC, name ASC" // JPQL
         )
 })
+@SQLDelete(sql="UPDATE subjects SET deleted = TRUE WHERE code = ? AND version = ?")
+@Where(clause = "deleted IS FALSE")
 public class Subject implements Serializable {
     @Id
     long code;
@@ -70,6 +75,10 @@ public class Subject implements Serializable {
 
     @Version
     private int version;
+
+    private boolean deleted;
+
+    private Date deleted_at;
 
     public Subject() {
         this.students = new LinkedList<Student>();
@@ -185,5 +194,21 @@ public class Subject implements Serializable {
     @Override
     public int hashCode() {
         return Objects.hash(code);
+    }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
+    }
+
+    public Date getDeleted_at() {
+        return deleted_at;
+    }
+
+    public void setDeleted_at(Date deleted_at) {
+        this.deleted_at = deleted_at;
     }
 }
