@@ -8,6 +8,7 @@ import pt.ipleiria.estg.dei.ei.dae.academics.entities.Course;
 import pt.ipleiria.estg.dei.ei.dae.academics.entities.Student;
 import pt.ipleiria.estg.dei.ei.dae.academics.entities.Subject;
 
+import java.util.Date;
 import java.util.List;
 
 @Stateless
@@ -70,6 +71,9 @@ public class SubjectBean {
 
     public void deleteSubject(long code) {
         Subject subject = entityManager.find(Subject.class, code);
+        subject.setDeleted_at(new Date());
+        entityManager.persist(subject);
+        entityManager.flush();
         entityManager.remove(subject);
     }
 
